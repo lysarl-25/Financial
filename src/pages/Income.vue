@@ -4,7 +4,7 @@ import { Plus, TrendingUp } from 'lucide-vue-next'
 import TransactionFilters from '@/components/transactions/TransactionFilters.vue'
 import TransactionTable from '@/components/transactions/TransactionTable.vue'
 import TransactionModal from '@/components/transactions/TransactionModal.vue'
-import Loading from '@/components/common/Loading.vue'
+import TableSkeleton from '@/components/common/TableSkeleton.vue'
 import Button from '@/components/common/Button.vue'
 import { useTransactionStore } from '@/stores/transactionStore'
 import { useSettingsStore } from '@/stores/settingsStore'
@@ -44,7 +44,7 @@ const total = computed(() => filteredIncome.value.reduce((s, t) => s + t.amount,
 
     <TransactionFilters fixed-type="income" />
 
-    <Loading v-if="transactionStore.loading && !transactionStore.loaded" label="Loading income…" />
+    <TableSkeleton v-if="transactionStore.loading && !transactionStore.loaded" :rows="5" show-summary />
     <TransactionTable v-else :transactions="filteredIncome" />
 
     <TransactionModal :open="addOpen" mode="create" forced-type="income" @close="addOpen = false" />

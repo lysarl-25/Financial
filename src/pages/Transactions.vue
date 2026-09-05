@@ -4,7 +4,7 @@ import { Plus } from 'lucide-vue-next'
 import TransactionFilters from '@/components/transactions/TransactionFilters.vue'
 import TransactionTable from '@/components/transactions/TransactionTable.vue'
 import TransactionModal from '@/components/transactions/TransactionModal.vue'
-import Loading from '@/components/common/Loading.vue'
+import TableSkeleton from '@/components/common/TableSkeleton.vue'
 import Button from '@/components/common/Button.vue'
 import { useTransactionStore } from '@/stores/transactionStore'
 
@@ -29,7 +29,7 @@ onMounted(() => {
 
     <TransactionFilters />
 
-    <Loading v-if="transactionStore.loading && !transactionStore.loaded" label="Loading transactions…" />
+    <TableSkeleton v-if="transactionStore.loading && !transactionStore.loaded" :rows="5" />
     <TransactionTable v-else :transactions="transactionStore.filtered" />
 
     <TransactionModal :open="addOpen" mode="create" @close="addOpen = false" />

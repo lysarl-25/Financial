@@ -46,4 +46,23 @@
   .label {
     @apply block text-xs font-medium uppercase tracking-wide text-ink-500 dark:text-ink-400 mb-1.5;
   }
+  .skeleton {
+    @apply rounded-xl bg-ink-100 dark:bg-ink-800;
+  }
+  .skeleton-pulse {
+    animation: skeleton-pulse 1.6s ease-in-out infinite;
+  }
+  .skeleton-text {
+    @apply skeleton h-3;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
 }

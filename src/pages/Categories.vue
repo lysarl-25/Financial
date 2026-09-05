@@ -7,7 +7,7 @@ import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import Button from '@/components/common/Button.vue'
 import Input from '@/components/common/Input.vue'
 import Select from '@/components/common/Select.vue'
-import Loading from '@/components/common/Loading.vue'
+import CardGridSkeleton from '@/components/common/CardGridSkeleton.vue'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useToastStore } from '@/stores/toastStore'
 import type { Category, TransactionType } from '@/types'
@@ -116,7 +116,7 @@ async function confirmDelete() {
       <Button @click="openCreate"><Plus :size="16" /> New Category</Button>
     </div>
 
-    <Loading v-if="categoryStore.loading && !categoryStore.loaded" label="Loading categories…" />
+    <CardGridSkeleton v-if="categoryStore.loading && !categoryStore.loaded" :cards="6" />
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="c in list" :key="c.id" class="card p-4 flex items-center justify-between">
         <div class="flex items-center gap-3 min-w-0">

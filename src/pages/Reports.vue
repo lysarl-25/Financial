@@ -5,6 +5,7 @@ import { Printer, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import '@/utils/chartSetup'
 import Select from '@/components/common/Select.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import ReportsSkeleton from '@/components/common/ReportsSkeleton.vue'
 import { useTransactionStore } from '@/stores/transactionStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useSettingsStore } from '@/stores/settingsStore'
@@ -223,7 +224,8 @@ function printReport() {
 </script>
 
 <template>
-  <div class="space-y-10">
+  <ReportsSkeleton v-if="transactionStore.loading && !transactionStore.loaded" />
+  <div v-else class="space-y-10">
     <section class="space-y-4">
       <div>
         <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">Overview</h2>

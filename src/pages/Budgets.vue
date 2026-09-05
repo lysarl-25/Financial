@@ -6,7 +6,7 @@ import BudgetForm from '@/components/budgets/BudgetForm.vue'
 import Modal from '@/components/common/Modal.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
-import Loading from '@/components/common/Loading.vue'
+import CardGridSkeleton from '@/components/common/CardGridSkeleton.vue'
 import Button from '@/components/common/Button.vue'
 import { useBudgetStore } from '@/stores/budgetStore'
 import { useTransactionStore } from '@/stores/transactionStore'
@@ -82,7 +82,7 @@ async function confirmDelete() {
       </Button>
     </div>
 
-    <Loading v-if="budgetStore.loading && !budgetStore.loaded" label="Loading budgets…" />
+    <CardGridSkeleton v-if="budgetStore.loading && !budgetStore.loaded" :cards="6" variant="card" />
     <EmptyState
       v-else-if="!budgetStore.progress.length"
       title="No budgets for this month"
