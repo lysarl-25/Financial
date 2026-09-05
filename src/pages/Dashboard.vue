@@ -6,7 +6,7 @@ import IncomeExpenseChart from '@/components/dashboard/IncomeExpenseChart.vue'
 import ExpenseChart from '@/components/dashboard/ExpenseChart.vue'
 import SavingsChart from '@/components/dashboard/SavingsChart.vue'
 import RecentTransactions from '@/components/dashboard/RecentTransactions.vue'
-import Loading from '@/components/common/Loading.vue'
+import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton.vue'
 import { useDashboardStore } from '@/stores/dashboardStore'
 import { useTransactionStore } from '@/stores/transactionStore'
 import { useBudgetStore } from '@/stores/budgetStore'
@@ -38,7 +38,7 @@ function categoryName(categoryId: string) {
 
 <template>
   <div v-if="transactionStore.loading && !transactionStore.loaded">
-    <Loading label="Loading your financial overview…" />
+    <DashboardSkeleton />
   </div>
   <div v-else class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4">

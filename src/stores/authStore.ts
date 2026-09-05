@@ -19,16 +19,6 @@ async function syncUserData(user: User) {
   const settingsStore = useSettingsStore()
   await settingsStore.loadForUser(user)
   settingsStore.applyTheme()
-
-  const transactionStore = useTransactionStore()
-  const categoryStore = useCategoryStore()
-  const budgetStore = useBudgetStore()
-
-  await Promise.all([
-    transactionStore.fetchAll(),
-    categoryStore.fetchAll(),
-    budgetStore.fetchAll(),
-  ])
 }
 
 function clearAppState() {
