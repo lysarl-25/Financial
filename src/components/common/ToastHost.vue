@@ -18,11 +18,28 @@ const toastStore = useToastStore()
           'border-ink-200 dark:border-ink-700': toast.variant === 'info',
         }"
       >
-        <CheckCircle2 v-if="toast.variant === 'success'" :size="18" class="text-income shrink-0 mt-0.5" />
-        <AlertCircle v-else-if="toast.variant === 'error'" :size="18" class="text-expense shrink-0 mt-0.5" />
-        <Info v-else :size="18" class="text-ink-500 shrink-0 mt-0.5" />
-        <p class="flex-1 text-ink-800 dark:text-ink-100">{{ toast.message }}</p>
-        <button class="text-ink-400 hover:text-ink-600" @click="toastStore.dismiss(toast.id)">
+        <CheckCircle2
+          v-if="toast.variant === 'success'"
+          :size="18"
+          class="text-income shrink-0 mt-0.5"
+        />
+        <AlertCircle
+          v-else-if="toast.variant === 'error'"
+          :size="18"
+          class="text-expense shrink-0 mt-0.5"
+        />
+        <Info
+          v-else
+          :size="18"
+          class="text-ink-500 shrink-0 mt-0.5"
+        />
+        <p class="flex-1 text-ink-800 dark:text-ink-100">
+          {{ toast.message }}
+        </p>
+        <button
+          class="text-ink-400 hover:text-ink-600"
+          @click="toastStore.dismiss(toast.id)"
+        >
           <X :size="14" />
         </button>
       </div>

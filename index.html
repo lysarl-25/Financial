@@ -13,7 +13,113 @@
     />
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div id="app-loader">
+        <div class="app-loader-inner">
+          <img src="/favicon.svg" alt="" class="app-loader-mark" />
+          <div class="app-loader-wordmark">Financial</div>
+          <div class="app-loader-spinner" aria-hidden="true"></div>
+          <div id="app-loader-error" class="app-loader-error" hidden>
+            <p class="app-loader-error-text">Couldn't connect. Check your connection and try again.</p>
+            <button type="button" id="app-loader-retry" class="app-loader-retry">Retry</button>
+          </div>
+        </div>
+      </div>
+      <style>
+        #app-loader {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f5f7f6;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
+          color: #122522;
+        }
+        .app-loader-inner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+        }
+        .app-loader-mark {
+          width: 56px;
+          height: 56px;
+          border-radius: 14px;
+          animation: app-loader-pulse 1.6s ease-in-out infinite;
+        }
+        .app-loader-wordmark {
+          font-size: 18px;
+          font-weight: 600;
+          letter-spacing: 0.01em;
+        }
+        .app-loader-spinner {
+          width: 28px;
+          height: 28px;
+          border: 3px solid rgba(18, 37, 34, 0.15);
+          border-top-color: #0f9d70;
+          border-radius: 50%;
+          animation: app-loader-spin 0.8s linear infinite;
+        }
+        .app-loader-error {
+          display: none;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          text-align: center;
+        }
+        .app-loader-error:not([hidden]) {
+          display: flex;
+        }
+        .app-loader-error-text {
+          margin: 0;
+          font-size: 14px;
+          color: #4b5b58;
+        }
+        .app-loader-retry {
+          border: 0;
+          border-radius: 10px;
+          padding: 8px 20px;
+          font: inherit;
+          font-size: 14px;
+          font-weight: 600;
+          color: #fff;
+          background: #122522;
+          cursor: pointer;
+        }
+        .app-loader-retry:hover {
+          background: #0f9d70;
+        }
+        @keyframes app-loader-spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes app-loader-pulse {
+          0%,
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.55;
+            transform: scale(0.96);
+          }
+        }
+      </style>
+      <script>
+        document.addEventListener('app:load-error', function () {
+          var spinner = document.querySelector('#app-loader .app-loader-spinner')
+          var error = document.querySelector('#app-loader-error')
+          if (spinner) spinner.style.display = 'none'
+          if (error) error.hidden = false
+        })
+        document.querySelector('#app-loader-retry')?.addEventListener('click', function () {
+          window.location.reload()
+        })
+      </script>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

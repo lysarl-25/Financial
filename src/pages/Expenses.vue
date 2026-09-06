@@ -28,25 +28,45 @@ const total = computed(() => filteredExpenses.value.reduce((s, t) => s + t.amoun
     <div class="card p-5 flex items-center justify-between bg-expense-light/40 dark:bg-expense/10 border-expense/20">
       <div class="flex items-center gap-3">
         <span class="h-10 w-10 rounded-xl bg-expense-light dark:bg-expense/20 flex items-center justify-center">
-          <TrendingDown :size="18" class="text-expense-dark dark:text-expense" />
+          <TrendingDown
+            :size="18"
+            class="text-expense-dark dark:text-expense"
+          />
         </span>
         <div>
-          <p class="text-xs uppercase tracking-wide text-ink-500 dark:text-ink-400">Total Expenses</p>
+          <p class="text-xs uppercase tracking-wide text-ink-500 dark:text-ink-400">
+            Total Expenses
+          </p>
           <p class="font-mono tabular-nums text-2xl font-semibold text-expense-dark dark:text-expense">
             {{ formatCurrency(total, settingsStore.currency) }}
           </p>
         </div>
       </div>
-      <Button class="hidden sm:inline-flex" @click="addOpen = true">
+      <Button
+        class="hidden sm:inline-flex"
+        @click="addOpen = true"
+      >
         <Plus :size="16" /> Add Expense
       </Button>
     </div>
 
     <TransactionFilters fixed-type="expense" />
 
-    <TableSkeleton v-if="transactionStore.loading && !transactionStore.loaded" :rows="5" show-summary />
-    <TransactionTable v-else :transactions="filteredExpenses" />
+    <TableSkeleton
+      v-if="transactionStore.loading && !transactionStore.loaded"
+      :rows="5"
+      show-summary
+    />
+    <TransactionTable
+      v-else
+      :transactions="filteredExpenses"
+    />
 
-    <TransactionModal :open="addOpen" mode="create" forced-type="expense" @close="addOpen = false" />
+    <TransactionModal
+      :open="addOpen"
+      mode="create"
+      forced-type="expense"
+      @close="addOpen = false"
+    />
   </div>
 </template>
