@@ -24,7 +24,10 @@ onMounted(() => {
 <template>
   <div class="min-h-screen flex bg-surface-alt dark:bg-ink-950">
     <Sidebar :collapsed="collapsed" />
-    <MobileMenu :open="mobileMenuOpen" @close="mobileMenuOpen = false" />
+    <MobileMenu
+      :open="mobileMenuOpen"
+      @close="mobileMenuOpen = false"
+    />
 
     <div class="flex-1 min-w-0 flex flex-col">
       <Header

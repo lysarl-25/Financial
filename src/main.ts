@@ -22,4 +22,7 @@ async function bootstrap() {
   app.mount('#app')
 }
 
-bootstrap()
+bootstrap().catch((error) => {
+  console.error('Failed to initialize app:', error)
+  window.dispatchEvent(new Event('app:load-error'))
+})

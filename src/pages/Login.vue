@@ -74,16 +74,28 @@ async function submit() {
       </div>
       <div class="grid grid-cols-3 gap-4 max-w-xl">
         <div class="rounded-2xl border border-ink-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-widest text-ink-500 dark:text-ink-400">Realtime</p>
-          <p class="mt-2 text-sm font-medium">Keep tabs on your numbers from any tab.</p>
+          <p class="text-xs uppercase tracking-widest text-ink-500 dark:text-ink-400">
+            Realtime
+          </p>
+          <p class="mt-2 text-sm font-medium">
+            Keep tabs on your numbers from any tab.
+          </p>
         </div>
         <div class="rounded-2xl border border-ink-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-widest text-ink-500 dark:text-ink-400">Secure</p>
-          <p class="mt-2 text-sm font-medium">Supabase Auth and row-level security.</p>
+          <p class="text-xs uppercase tracking-widest text-ink-500 dark:text-ink-400">
+            Secure
+          </p>
+          <p class="mt-2 text-sm font-medium">
+            Supabase Auth and row-level security.
+          </p>
         </div>
         <div class="rounded-2xl border border-ink-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-widest text-ink-500 dark:text-ink-400">Fast</p>
-          <p class="mt-2 text-sm font-medium">Vue 3, Pinia, and a clean dashboard flow.</p>
+          <p class="text-xs uppercase tracking-widest text-ink-500 dark:text-ink-400">
+            Fast
+          </p>
+          <p class="mt-2 text-sm font-medium">
+            Vue 3, Pinia, and a clean dashboard flow.
+          </p>
         </div>
       </div>
     </div>
@@ -91,9 +103,15 @@ async function submit() {
     <div class="flex items-center justify-center p-6 sm:p-10">
       <div class="w-full max-w-md rounded-3xl border border-ink-200/70 dark:border-white/10 bg-white/90 dark:bg-ink-900/85 p-6 sm:p-8 shadow-2xl shadow-ink-900/5 backdrop-blur">
         <div class="lg:hidden mb-8">
-          <p class="text-xs uppercase tracking-[0.25em] text-ink-500 dark:text-ink-400">Financial</p>
-          <h1 class="mt-2 font-display text-3xl font-semibold text-ink-900 dark:text-white">Welcome back</h1>
-          <p class="mt-2 text-sm text-ink-600 dark:text-ink-300">Sign in to continue to your dashboard.</p>
+          <p class="text-xs uppercase tracking-[0.25em] text-ink-500 dark:text-ink-400">
+            Financial
+          </p>
+          <h1 class="mt-2 font-display text-3xl font-semibold text-ink-900 dark:text-white">
+            Welcome back
+          </h1>
+          <p class="mt-2 text-sm text-ink-600 dark:text-ink-300">
+            Sign in to continue to your dashboard.
+          </p>
         </div>
 
         <div class="flex rounded-2xl bg-ink-100 dark:bg-ink-800 p-1">
@@ -120,10 +138,28 @@ async function submit() {
           </button>
         </div>
 
-        <form class="mt-6 space-y-4" @submit.prevent="submit">
-          <Input v-model="form.email" type="email" label="Email" placeholder="you@example.com" />
-          <Input v-if="mode !== 'magic'" v-model="form.password" type="password" label="Password" placeholder="Password" />
-          <Button type="submit" class="w-full" :disabled="authStore.loading">
+        <form
+          class="mt-6 space-y-4"
+          @submit.prevent="submit"
+        >
+          <Input
+            v-model="form.email"
+            type="email"
+            label="Email"
+            placeholder="you@example.com"
+          />
+          <Input
+            v-if="mode !== 'magic'"
+            v-model="form.password"
+            type="password"
+            label="Password"
+            placeholder="Password"
+          />
+          <Button
+            type="submit"
+            class="w-full"
+            :disabled="authStore.loading"
+          >
             {{ authStore.loading ? 'Please wait...' : submitLabel }}
           </Button>
         </form>

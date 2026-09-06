@@ -22,16 +22,29 @@ onMounted(() => {
       <p class="text-sm text-ink-500 dark:text-ink-400">
         {{ transactionStore.transactions.length }} total transactions
       </p>
-      <Button class="hidden sm:inline-flex" @click="addOpen = true">
+      <Button
+        class="hidden sm:inline-flex"
+        @click="addOpen = true"
+      >
         <Plus :size="16" /> Add Transaction
       </Button>
     </div>
 
     <TransactionFilters />
 
-    <TableSkeleton v-if="transactionStore.loading && !transactionStore.loaded" :rows="5" />
-    <TransactionTable v-else :transactions="transactionStore.filtered" />
+    <TableSkeleton
+      v-if="transactionStore.loading && !transactionStore.loaded"
+      :rows="5"
+    />
+    <TransactionTable
+      v-else
+      :transactions="transactionStore.filtered"
+    />
 
-    <TransactionModal :open="addOpen" mode="create" @close="addOpen = false" />
+    <TransactionModal
+      :open="addOpen"
+      mode="create"
+      @close="addOpen = false"
+    />
   </div>
 </template>
