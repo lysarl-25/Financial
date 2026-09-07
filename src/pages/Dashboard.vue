@@ -31,6 +31,13 @@ const savingsChangeLabel = computed(() => formatChange(stats.value.savings, stat
 
 const topBudgets = computed(() => [...budgetStore.progress].sort((a, b) => b.percentUsed - a.percentUsed).slice(0, 3))
 
+const greeting = computed(() => {
+  const hour = new Date().getHours()
+  const name = settingsStore.profileName?.split(/\s+/)[0] || ''
+  const prefix = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
+  return name ? `${prefix}, ${name}` : prefix
+})
+
 function categoryName(categoryId: string) {
   return categoryStore.byId(categoryId)?.name || categoryId
 }
@@ -41,6 +48,11 @@ function categoryName(categoryId: string) {
     <DashboardSkeleton />
   </div>
   <div v-else class="space-y-6">
+    <div>
+      <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">{{ greeting }}</h2>
+      <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">Your financial overview at a glance.</p>
+    </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4">
       <StatCard label="Total Balance" :value="stats.balance" icon="balance" :change-label="balanceChangeLabel" />
       <StatCard label="Total Income" :value="stats.income" icon="income" :change-label="incomeChangeLabel" />

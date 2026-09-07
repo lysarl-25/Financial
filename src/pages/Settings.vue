@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
+import { Sun, Moon } from 'lucide-vue-next'
 import Input from '@/components/common/Input.vue'
 import Select from '@/components/common/Select.vue'
 import Button from '@/components/common/Button.vue'
@@ -53,6 +54,11 @@ async function updateDateFormat(value: string) {
 
 <template>
   <div class="max-w-3xl space-y-6">
+    <div>
+      <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">Account Settings</h2>
+      <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">Manage your account, preferences, and financial application settings.</p>
+    </div>
+
     <div class="card p-6">
       <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50 mb-4">Profile</h3>
       <form class="grid grid-cols-1 sm:grid-cols-2 gap-4" @submit.prevent="saveProfile">
@@ -76,14 +82,15 @@ async function updateDateFormat(value: string) {
           <p class="text-xs text-ink-500 dark:text-ink-400">Switch between light and dark theme</p>
         </div>
         <button
-          class="relative h-6 w-11 rounded-full transition-colors"
-          :class="settingsStore.theme === 'dark' ? 'bg-ink-800' : 'bg-ink-200'"
+          class="relative h-6 w-11 rounded-full transition-colors flex items-center"
+          :class="settingsStore.theme === 'dark' ? 'bg-ink-800 justify-end pr-0.5' : 'bg-ink-200 justify-start pl-0.5'"
           @click="settingsStore.toggleTheme()"
+          :aria-label="`Switch to ${settingsStore.theme === 'dark' ? 'light' : 'dark'} mode`"
         >
-          <span
-            class="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform"
-            :class="settingsStore.theme === 'dark' ? 'translate-x-5' : 'translate-x-0.5'"
-          />
+          <span class="h-5 w-5 rounded-full bg-white shadow-sm flex items-center justify-center">
+            <Sun v-if="settingsStore.theme === 'light'" :size="12" class="text-amber-500" />
+            <Moon v-else :size="12" class="text-ink-800" />
+          </span>
         </button>
       </div>
     </div>

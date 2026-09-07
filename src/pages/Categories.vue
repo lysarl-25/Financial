@@ -38,7 +38,6 @@ const iconOptions = [
   'Home', 
   'Plane', 
   'MoreHorizontal', 
-  'Tag',
   'Coffee',
   'BookOpen',
   'Music',
@@ -155,6 +154,11 @@ async function confirmDelete() {
 
 <template>
   <div class="space-y-5">
+    <div>
+      <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">Financial Categories</h2>
+      <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">Organize and manage your income and expenses by category for better financial tracking.</p>
+    </div>
+
     <div class="flex items-center justify-between flex-wrap gap-3">
       <div class="inline-flex rounded-xl bg-ink-100 dark:bg-ink-800 p-1">
         <button

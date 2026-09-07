@@ -19,16 +19,7 @@ const profileInitials = computed(() => {
     .join('')
 })
 
-const titles: Record<string, string> = {
-  dashboard: 'Dashboard',
-  transactions: 'Transactions',
-  income: 'Income',
-  expenses: 'Expenses',
-  budgets: 'Budgets',
-  reports: 'Reports',
-  categories: 'Categories',
-  settings: 'Settings',
-}
+
 </script>
 
 <template>
@@ -43,17 +34,7 @@ const titles: Record<string, string> = {
       >
         <Menu :size="20" />
       </button>
-      <button
-        class="hidden md:inline-flex p-2 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-600 dark:text-ink-300"
-        :aria-label="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
-        @click="emit('toggle-collapse')"
-      >
-        <PanelLeft v-if="collapsed" :size="18" />
-        <PanelLeftClose v-else :size="18" />
-      </button>
-      <h1 class="font-display text-lg sm:text-xl font-semibold text-ink-900 dark:text-ink-50">
-        {{ titles[route.name as string] || 'Financial' }}
-      </h1>
+
     </div>
 
     <div class="flex items-center gap-2">

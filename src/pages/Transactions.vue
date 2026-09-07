@@ -18,10 +18,16 @@ onMounted(() => {
 
 <template>
   <div class="space-y-5">
-    <div class="flex items-center justify-between">
-      <p class="text-sm text-ink-500 dark:text-ink-400">
-        {{ transactionStore.transactions.length }} total transactions
-      </p>
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">Transaction Overview</h2>
+        <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">
+          View, manage, and track all your income and expense transactions in one place.
+        </p>
+        <p class="text-sm text-ink-500 dark:text-ink-400 mt-2">
+          {{ transactionStore.transactions.length }} total transactions
+        </p>
+      </div>
       <Button
         class="hidden sm:inline-flex"
         @click="addOpen = true"

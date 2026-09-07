@@ -228,7 +228,7 @@ function printReport() {
   <div v-else class="space-y-10">
     <section class="space-y-4">
       <div>
-        <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">Overview</h2>
+        <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50"> Report Overview</h2>
         <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">Income, expenses, and trends for the selected date range.</p>
       </div>
 
