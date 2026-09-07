@@ -65,6 +65,11 @@ async function confirmDelete() {
 
 <template>
   <div class="space-y-5">
+    <div>
+      <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">Budget Planning</h2>
+      <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">Set spending limits, track your progress, and stay on top of your financial goals.</p>
+    </div>
+
     <div class="flex items-center justify-between flex-wrap gap-3">
       <div class="flex items-center gap-2">
         <button class="p-2 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800" @click="budgetStore.setSelectedMonth(shiftMonthKey(budgetStore.selectedMonth, -1))">
