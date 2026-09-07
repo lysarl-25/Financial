@@ -9,10 +9,11 @@ import {
   BarChart3,
   Tags,
   Settings as SettingsIcon,
-  BookText,
+  DollarSign
 } from 'lucide-vue-next'
 
 defineProps<{ collapsed: boolean }>()
+const emit = defineEmits<{ 'toggle-collapse': [] }>()
 const route = useRoute()
 
 const nav = [
@@ -37,9 +38,13 @@ function isActive(to: string) {
     :class="collapsed ? 'w-[76px]' : 'w-64'"
   >
     <div class="h-16 flex items-center gap-2.5 px-5 border-b border-ink-100 dark:border-ink-800">
-      <div class="h-8 w-8 rounded-lg bg-ink-900 dark:bg-ink-100 flex items-center justify-center shrink-0">
-        <BookText :size="16" class="text-income" />
-      </div>
+      <button
+        class="h-8 w-10 rounded-lg bg-ink-900 dark:bg-ink-100 flex items-center justify-center shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+        aria-label="Toggle sidebar"
+        @click="emit('toggle-collapse')"
+      >
+        <DollarSign :size="28" class="text-income" />
+      </button>
       <span v-if="!collapsed" class="font-display text-lg font-semibold tracking-tight text-ink-900 dark:text-ink-50">
         Financial
       </span>

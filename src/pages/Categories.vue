@@ -38,7 +38,6 @@ const iconOptions = [
   'Home', 
   'Plane', 
   'MoreHorizontal', 
-  'Tag',
   'Coffee',
   'BookOpen',
   'Music',

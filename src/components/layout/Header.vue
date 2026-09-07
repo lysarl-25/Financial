@@ -34,14 +34,7 @@ const profileInitials = computed(() => {
       >
         <Menu :size="20" />
       </button>
-      <button
-        class="hidden md:inline-flex p-2 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 text-ink-600 dark:text-ink-300"
-        :aria-label="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
-        @click="emit('toggle-collapse')"
-      >
-        <PanelLeft v-if="collapsed" :size="18" />
-        <PanelLeftClose v-else :size="18" />
-      </button>
+
     </div>
 
     <div class="flex items-center gap-2">
