@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { Budget } from '@/types'
 import { budgetService } from '@/services/budgetService'
+import { logActivity } from '@/services/supabase'
 import { useTransactionStore } from './transactionStore'
 import { currentMonthKey } from '@/utils/format'
 import { round2 } from '@/utils/calculations'
@@ -59,17 +60,30 @@ export const useBudgetStore = defineStore('budget', {
     async create(payload: Omit<Budget, 'id'>) {
       const record = await budgetService.create(payload)
       this.budgets.push(record)
+      await logActivity({
+        action: 'budget.create',
+        entityType: 'budget',
+        entityId: record.id,
+        metadata: { amount: record.amount, month: record.month },
+      })
       return record
     },
     async update(id: string, payload: Partial<Omit<Budget, 'id'>>) {
       const record = await budgetService.update(id, payload)
       const idx = this.budgets.findIndex((b) => b.id === id)
       if (idx !== -1) this.budgets[idx] = record
+      await logActivity({
+        action: 'budget.update',
+        entityType: 'budget',
+        entityId: id,
+        metadata: { amount: record.amount, month: record.month },
+      })
       return record
     },
     async remove(id: string) {
       await budgetService.remove(id)
       this.budgets = this.budgets.filter((b) => b.id !== id)
+      await logActivity({ action: 'budget.delete', entityType: 'budget', entityId: id })
     },
     setSelectedMonth(month: string) {
       this.selectedMonth = month

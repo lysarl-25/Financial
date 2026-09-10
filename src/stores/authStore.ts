@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import type { Session, User } from '@supabase/supabase-js'
+import type { UserRole } from '@/types'
 import { categories as defaultCategories } from '@/data/categories'
-import { supabase, ensureDefaultProfileAndCategories } from '@/services/supabase'
+import { supabase, ensureDefaultProfileAndCategories, fetchMyRole, isCurrentUserActive, logActivity, syncUserEmail } from '@/services/supabase'
 import { useBudgetStore } from './budgetStore'
 import { useCategoryStore } from './categoryStore'
 import { useSettingsStore } from './settingsStore'
@@ -15,10 +16,21 @@ async function syncUserData(user: User) {
     user,
     defaultCategories.map(({ name, type, icon, color }) => ({ name, type, icon, color })),
   )
+  await syncUserEmail(user)
 
   const settingsStore = useSettingsStore()
   await settingsStore.loadForUser(user)
   settingsStore.applyTheme()
+
+  const authStore = useAuthStore()
+  authStore.role = await fetchMyRole()
+
+  const active = await isCurrentUserActive()
+  if (!active) {
+    await supabase.auth.signOut()
+    authStore.role = 'user'
+    clearAppState()
+  }
 }
 
 function clearAppState() {
@@ -34,12 +46,14 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     session: null as Session | null,
     user: null as User | null,
+    role: 'user' as UserRole,
     loading: false,
     initialized: false,
     error: '' as string,
   }),
   getters: {
     isAuthenticated: (state) => Boolean(state.user),
+    isAdmin: (state) => state.role === 'admin',
   },
   actions: {
     async initialize() {
@@ -56,6 +70,7 @@ export const useAuthStore = defineStore('auth', {
         if (this.user) {
           await syncUserData(this.user)
         } else {
+          this.role = 'user'
           clearAppState()
         }
 
@@ -97,6 +112,11 @@ export const useAuthStore = defineStore('auth', {
           password: payload.password,
         })
         if (error) throw error
+        if (data.user && !(await isCurrentUserActive())) {
+          await supabase.auth.signOut()
+          throw new Error('Your account has been disabled. Contact an administrator.')
+        }
+        await logActivity({ action: 'auth.login', entityType: 'auth' })
         return data
       } finally {
         this.loading = false
@@ -116,6 +136,7 @@ export const useAuthStore = defineStore('auth', {
           },
         })
         if (error) throw error
+        if (data.user) await logActivity({ action: 'auth.signup', entityType: 'auth' })
         return data
       } finally {
         this.loading = false
@@ -139,8 +160,10 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true
       this.error = ''
       try {
+        await logActivity({ action: 'auth.logout', entityType: 'auth' })
         const { error } = await supabase.auth.signOut()
         if (error) throw error
+        this.role = 'user'
         clearAppState()
       } finally {
         this.loading = false

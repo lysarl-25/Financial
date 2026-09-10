@@ -1,5 +1,5 @@
 import type { User } from '@supabase/supabase-js'
-import type { AppSettings, Budget, Category, Transaction } from '@/types'
+import type { ActivityLog, AppSettings, Budget, Category, Transaction, UserRecord, UserRole } from '@/types'
 import { supabase } from './supabaseClient'
 
 // Keep the service module as the shared import surface for existing callers.
@@ -60,6 +60,26 @@ export interface ProfileRow {
   date_format: string | null
   theme: AppSettings['theme'] | null
   notifications: AppSettings['notifications'] | null
+}
+
+export interface UserRow {
+  id: string
+  email: string | null
+  full_name: string | null
+  role: UserRole
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface ActivityLogRow {
+  id: string
+  user_id: string
+  action: string
+  entity_type: string
+  entity_id: string | null
+  metadata: Record<string, unknown> | null
+  created_at: string
 }
 
 const amount = (value: number | string) => Number(value)
@@ -236,4 +256,109 @@ export async function ensureDefaultProfileAndCategories(user: User, defaultCateg
   )
 
   if (insertCategoriesError) throw insertCategoriesError
+}
+
+// ---- Role & activity logging -------------------------------------------------
+
+export function fromUserRow(row: UserRow, email = ''): UserRecord {
+  return {
+    id: row.id,
+    fullName: row.full_name ?? '',
+    role: row.role,
+    isActive: row.is_active,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    email,
+  }
+}
+
+/** Reads the current user's role from public.users, falling back to 'user'. */
+export async function fetchMyRole(): Promise<UserRole> {
+  const user = (await supabase.auth.getUser()).data.user
+  if (!user) return 'user'
+  const { data, error } = await supabase.from('users').select('role').eq('id', user.id).maybeSingle<{ role: UserRole }>()
+  if (error || !data) return 'user'
+  return data.role
+}
+
+/** Whether the current user is active (missing row counts as active). */
+export async function isCurrentUserActive(): Promise<boolean> {
+  const user = (await supabase.auth.getUser()).data.user
+  if (!user) return false
+  const { data } = await supabase.from('users').select('is_active').eq('id', user.id).maybeSingle<{ is_active: boolean }>()
+  return data?.is_active ?? true
+}
+
+/** Keeps the users.email copy in sync with auth.users on each session load. */
+export async function syncUserEmail(user: User) {
+  const email = user.email ?? ''
+  if (!email) return
+  const { data, error } = await supabase.from('users').select('id').eq('id', user.id).maybeSingle()
+  if (error) return
+  if (!data) {
+    await supabase.from('users').insert({ id: user.id, email, full_name: user.user_metadata?.full_name?.trim() || null })
+  } else if (user.email) {
+    await supabase.from('users').update({ email, full_name: user.user_metadata?.full_name?.trim() || null }).eq('id', user.id)
+  }
+}
+
+/** Fire-and-forget activity log entry for the current user. Never throws. */
+export async function logActivity(input: {
+  action: string
+  entityType?: string
+  entityId?: string
+  metadata?: Record<string, unknown>
+}) {
+  const user = (await supabase.auth.getUser()).data.user
+  if (!user) return
+  try {
+    await supabase.from('user_activity_log').insert({
+      user_id: user.id,
+      action: input.action,
+      entity_type: input.entityType ?? 'app',
+      entity_id: input.entityId ?? null,
+      metadata: input.metadata ?? null,
+    })
+  } catch {
+    // Activity logging must never break the primary operation.
+  }
+}
+
+/** Admin: list all users. */
+export async function listUsers(): Promise<UserRecord[]> {
+  const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false })
+  if (error) throw error
+  return (data ?? []).map((row: UserRow) => fromUserRow(row, row.email ?? ''))
+}
+
+/** Admin: update a user's role and/or active status. */
+export async function updateUser(id: string, payload: { role?: UserRole; is_active?: boolean }) {
+  const update: { role?: UserRole; is_active?: boolean } = {}
+  if (payload.role !== undefined) update.role = payload.role
+  if (payload.is_active !== undefined) update.is_active = payload.is_active
+  const { data, error } = await supabase.from('users').update(update).eq('id', id).select('*').single()
+  if (error) throw error
+  return fromUserRow(data, (data as UserRow).email ?? '')
+}
+
+/** Admin: list activity entries joined with user names/emails. */
+export async function listActivity(limit = 200): Promise<ActivityLog[]> {
+  const { data, error } = await supabase
+    .from('user_activity_log')
+    .select('*, users:users(full_name, email)')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (error) throw error
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    userId: row.user_id,
+    action: row.action,
+    entityType: row.entity_type,
+    entityId: row.entity_id,
+    metadata: row.metadata,
+    createdAt: row.created_at,
+    userFullName: row.users?.[0]?.full_name ?? '',
+    userEmail: row.users?.[0]?.email ?? '',
+  }))
 }
