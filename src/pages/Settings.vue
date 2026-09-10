@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { Sun, Moon } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
+import { Sun, Moon, LogOut } from 'lucide-vue-next'
 import Input from '@/components/common/Input.vue'
 import Select from '@/components/common/Select.vue'
 import Button from '@/components/common/Button.vue'
+import { useAuthStore } from '@/stores/authStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { useToastStore } from '@/stores/toastStore'
 
+const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
 const toastStore = useToastStore()
+const router = useRouter()
 
 const profile = reactive({ profileName: settingsStore.profileName })
 
@@ -48,6 +52,16 @@ async function updateDateFormat(value: string) {
     toastStore.success('Date format saved.')
   } catch {
     toastStore.error('Could not save date format preference.')
+  }
+}
+
+async function handleSignOut() {
+  try {
+    await authStore.signOut()
+    toastStore.success('Signed out successfully.')
+    router.replace('/login')
+  } catch {
+    toastStore.error('Could not sign out.')
   }
 }
 </script>
@@ -135,6 +149,15 @@ async function updateDateFormat(value: string) {
           />
         </label>
       </div>
+    </div>
+
+    <div class="card p-6">
+      <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50 mb-4">Session</h3>
+      <p class="text-sm text-ink-500 dark:text-ink-400 mb-4">Sign out of your account on this device.</p>
+      <Button variant="danger" :disabled="authStore.loading" @click="handleSignOut">
+        <LogOut :size="16" />
+        Sign Out
+      </Button>
     </div>
   </div>
 </template>
