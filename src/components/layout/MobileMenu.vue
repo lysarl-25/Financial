@@ -12,7 +12,7 @@ import {
   Settings as SettingsIcon,
   ShieldCheck,
   X,
-  BookText,
+  DollarSign,
 } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -53,7 +53,7 @@ function isActive(to: string) {
             <div class="h-16 flex items-center justify-between px-5 border-b border-ink-100 dark:border-ink-800">
               <div class="flex items-center gap-2.5">
                 <div class="h-8 w-8 rounded-lg bg-ink-900 dark:bg-ink-100 flex items-center justify-center">
-                  <BookText :size="16" class="text-income" />
+                  <DollarSign :size="16" class="text-income" />
                 </div>
                 <span class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">Financial</span>
               </div>
