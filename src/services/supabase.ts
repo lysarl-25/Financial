@@ -384,11 +384,15 @@ export async function deleteUser(userId: string): Promise<void> {
   const { data: sessionData } = await supabase.auth.getSession()
   const accessToken = sessionData.session?.access_token
 
-  const { data, error: fnError } = await supabase.functions.invoke('delete-user', {
+  const { data, error: fnError } = await supabase.functions.invoke<{ success?: boolean; emailReusable?: boolean; error?: string }>('delete-user', {
     body: { userId },
     headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
   })
 
   if (fnError) throw fnError
   if (data?.error) throw new Error(data.error)
+  if (!data?.success) throw new Error('Failed to delete user')
+  if (data.emailReusable === false) {
+    throw new Error('User was deleted, but Supabase still reserves this email. Enable email reuse in your Auth settings.')
+  }
 }
