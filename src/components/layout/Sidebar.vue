@@ -31,7 +31,7 @@ const nav = computed(() => {
     { to: '/categories', label: 'Categories', icon: Tags },
   ]
   if (authStore.isAdmin) {
-    items.push({ to: '/admin', label: 'Admin', icon: ShieldCheck })
+    items.push({ to: '/admin', label: 'User Management', icon: ShieldCheck })
   }
   items.push({ to: '/settings', label: 'Settings', icon: SettingsIcon })
   return items

@@ -164,7 +164,7 @@ const activeCount = computed(() => users.value.filter((u) => u.isActive).length)
           Admin Panel
         </h2>
         <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">
-          Manage users, set permissions, and track user activity.
+          Manage users, set permissions, and track user sign-ins and sign-outs.
         </p>
         <p class="text-sm text-ink-500 dark:text-ink-400 mt-2">
           {{ users.length }} registered users · {{ activeCount }} active

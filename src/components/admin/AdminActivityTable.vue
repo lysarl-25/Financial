@@ -6,7 +6,7 @@ import EmptyState from '@/components/common/EmptyState.vue'
 
 const props = defineProps<{ activities: ActivityLog[] }>()
 const search = ref('')
-const actionFilter = ref('all')
+const actionFilter = ref('auth')
 const page = ref(1)
 const pageSize = 10
 
@@ -79,14 +79,13 @@ function formatDateTime(iso: string) {
         <input
           v-model="search"
           type="text"
-          placeholder="Search by user, email, or action…"
+          placeholder="Search by user or email…"
           class="input pl-9"
         />
       </div>
       <select v-model="actionFilter" class="input sm:w-52 appearance-none cursor-pointer">
-        <option value="all">All activity</option>
         <option value="auth">Auth events</option>
-        <option value="data">Data changes</option>
+        <option value="all">All activity</option>
       </select>
     </div>
 
@@ -94,7 +93,7 @@ function formatDateTime(iso: string) {
       <EmptyState
         v-if="!filtered.length"
         title="No activity found"
-        description="User actions will appear here as they use the app."
+        description="User sign-ins, sign-ups, and sign-outs will appear here."
       />
       <template v-else>
         <div class="overflow-x-auto">
@@ -103,7 +102,6 @@ function formatDateTime(iso: string) {
               <tr class="border-b border-ink-100 dark:border-ink-800 text-left text-xs uppercase tracking-wide text-ink-500 dark:text-ink-400">
                 <th class="px-5 py-3 font-medium">User</th>
                 <th class="px-5 py-3 font-medium">Action</th>
-                <th class="px-5 py-3 font-medium hidden sm:table-cell">Entity</th>
                 <th class="px-5 py-3 font-medium text-right">Time</th>
               </tr>
             </thead>
@@ -120,9 +118,6 @@ function formatDateTime(iso: string) {
                   >
                     {{ actionInfo(a.action).label }}
                   </span>
-                </td>
-                <td class="px-5 py-3 hidden sm:table-cell text-ink-500 dark:text-ink-400">
-                  {{ a.entityType }}
                 </td>
                 <td class="px-5 py-3 text-right whitespace-nowrap text-ink-500 dark:text-ink-400">
                   {{ formatDateTime(a.createdAt) }}
