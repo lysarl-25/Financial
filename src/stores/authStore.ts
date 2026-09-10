@@ -88,24 +88,13 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async signIn(payload: { email: string; password?: string; magicLink?: boolean }) {
+    async signIn(payload: { email: string; password: string }) {
       this.loading = true
       this.error = ''
       try {
-        if (payload.magicLink) {
-          const { error } = await supabase.auth.signInWithOtp({
-            email: payload.email,
-            options: {
-              emailRedirectTo: window.location.origin,
-            },
-          })
-          if (error) throw error
-          return { magicLinkSent: true }
-        }
-
         const { data, error } = await supabase.auth.signInWithPassword({
           email: payload.email,
-          password: payload.password ?? '',
+          password: payload.password,
         })
         if (error) throw error
         return data
@@ -114,30 +103,33 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async signUp(payload: { email: string; password: string; magicLink?: boolean }) {
+    async signUp(payload: { email: string; password: string; fullName?: string }) {
       this.loading = true
       this.error = ''
       try {
-        if (payload.magicLink) {
-          const { error } = await supabase.auth.signInWithOtp({
-            email: payload.email,
-            options: {
-              emailRedirectTo: window.location.origin,
-            },
-          })
-          if (error) throw error
-          return { magicLinkSent: true }
-        }
-
         const { data, error } = await supabase.auth.signUp({
           email: payload.email,
           password: payload.password,
           options: {
             emailRedirectTo: window.location.origin,
+            data: payload.fullName ? { full_name: payload.fullName } : undefined,
           },
         })
         if (error) throw error
         return data
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async resetPassword(email: string) {
+      this.loading = true
+      this.error = ''
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin,
+        })
+        if (error) throw error
       } finally {
         this.loading = false
       }

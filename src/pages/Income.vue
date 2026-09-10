@@ -26,8 +26,12 @@ const total = computed(() => filteredIncome.value.reduce((s, t) => s + t.amount,
 <template>
   <div class="space-y-5">
     <div>
-      <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">Income Overview</h2>
-      <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">Track and manage all your income sources and earnings in one place.</p>
+      <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">
+        Income Overview
+      </h2>
+      <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">
+        Track and manage all your income sources and earnings in one place.
+      </p>
     </div>
 
     <div class="card p-5 flex items-center justify-between bg-income-light/40 dark:bg-income/10 border-income/20">
