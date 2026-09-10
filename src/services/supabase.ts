@@ -343,22 +343,52 @@ export async function updateUser(id: string, payload: { role?: UserRole; is_acti
 
 /** Admin: list activity entries joined with user names/emails. */
 export async function listActivity(limit = 200): Promise<ActivityLog[]> {
-  const { data, error } = await supabase
+  const { data: rows, error } = await supabase
     .from('user_activity_log')
-    .select('*, users:users(full_name, email)')
+    .select('*')
     .order('created_at', { ascending: false })
     .limit(limit)
   if (error) throw error
+  if (!rows || rows.length === 0) return []
 
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    userId: row.user_id,
-    action: row.action,
-    entityType: row.entity_type,
-    entityId: row.entity_id,
-    metadata: row.metadata,
-    createdAt: row.created_at,
-    userFullName: row.users?.[0]?.full_name ?? '',
-    userEmail: row.users?.[0]?.email ?? '',
-  }))
+  const userIds = [...new Set(rows.map((r: ActivityLogRow) => r.user_id))]
+  const { data: userRows } = await supabase
+    .from('users')
+    .select('id, full_name, email')
+    .in('id', userIds)
+
+  const userMap = new Map<string, { full_name: string | null; email: string | null }>()
+  for (const u of userRows ?? []) {
+    userMap.set(u.id, { full_name: u.full_name, email: u.email })
+  }
+
+  return rows.map((row) => {
+    const user = userMap.get(row.user_id)
+    return {
+      id: row.id,
+      userId: row.user_id,
+      action: row.action,
+      entityType: row.entity_type,
+      entityId: row.entity_id,
+      metadata: row.metadata,
+      createdAt: row.created_at,
+      userFullName: user?.full_name ?? '',
+      userEmail: user?.email ?? '',
+    }
+  })
+}
+
+/** Admin: permanently delete a user from auth.users (cascades to all public tables). */
+export async function deleteUser(userId: string): Promise<void> {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
+  const { data: sessionData } = await supabase.auth.getSession()
+  const accessToken = sessionData.session?.access_token
+
+  const { data, error: fnError } = await supabase.functions.invoke('delete-user', {
+    body: { userId },
+    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+  })
+
+  if (fnError) throw fnError
+  if (data?.error) throw new Error(data.error)
 }

@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { Users, Activity as ActivityIcon, RefreshCw } from 'lucide-vue-next'
 import type { ActivityLog, UserRecord } from '@/types'
-import { listActivity, listUsers, logActivity, updateUser, fetchMyRole } from '@/services/supabase'
+import { listActivity, listUsers, logActivity, updateUser, deleteUser, fetchMyRole } from '@/services/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useSettingsStore } from '@/stores/settingsStore'
@@ -10,6 +10,8 @@ import AdminUsersTable from '@/components/admin/AdminUsersTable.vue'
 import AdminActivityTable from '@/components/admin/AdminActivityTable.vue'
 import UserEditModal from '@/components/admin/UserEditModal.vue'
 import TableSkeleton from '@/components/common/TableSkeleton.vue'
+import Modal from '@/components/common/Modal.vue'
+import Button from '@/components/common/Button.vue'
 
 const authStore = useAuthStore()
 const toastStore = useToastStore()
@@ -21,6 +23,9 @@ const activities = ref<ActivityLog[]>([])
 const loading = ref(false)
 const editing = ref<UserRecord | null>(null)
 const editOpen = ref(false)
+const deleting = ref<UserRecord | null>(null)
+const deleteOpen = ref(false)
+const deletingUser = ref(false)
 
 const tabs = [
   { key: 'users' as const, label: 'Users', icon: Users },
@@ -45,6 +50,36 @@ onMounted(loadAll)
 function openEdit(user: UserRecord) {
   editing.value = user
   editOpen.value = true
+}
+
+function openDelete(user: UserRecord) {
+  deleting.value = user
+  deleteOpen.value = true
+}
+
+async function confirmDelete() {
+  const user = deleting.value
+  if (!user) return
+
+  deletingUser.value = true
+  try {
+    await deleteUser(user.id)
+    users.value = users.value.filter((u) => u.id !== user.id)
+    await logActivity({
+      action: 'user.delete',
+      entityType: 'user',
+      entityId: user.id,
+      metadata: { targetEmail: user.email, targetName: user.fullName },
+    })
+    toastStore.success(`User ${user.email} has been permanently deleted.`)
+  } catch {
+    toastStore.error('Could not delete user. Make sure the Edge Function is deployed.')
+  } finally {
+    deletingUser.value = false
+    deleteOpen.value = false
+    deleting.value = null
+    activities.value = await listActivity()
+  }
 }
 
 async function saveUser(payload: { role: UserRecord['role']; isActive: boolean }) {
@@ -168,6 +203,7 @@ const activeCount = computed(() => users.value.filter((u) => u.isActive).length)
         :users="users"
         :current-user-id="authStore.user?.id ?? null"
         @edit="openEdit"
+        @delete="openDelete"
       />
       <AdminActivityTable v-else :activities="activities" />
     </div>
@@ -178,5 +214,37 @@ const activeCount = computed(() => users.value.filter((u) => u.isActive).length)
       @save="saveUser"
       @close="editOpen = false"
     />
+
+    <Modal :open="deleteOpen" title="Delete User" @close="deleteOpen = false">
+      <div v-if="deleting" class="space-y-4">
+        <div class="rounded-xl bg-red-50 dark:bg-red-900/20 p-4">
+          <p class="text-sm text-red-700 dark:text-red-400">
+            <strong>Warning:</strong> This action cannot be undone. All data associated with this user will be permanently deleted, including:
+          </p>
+          <ul class="mt-2 text-sm text-red-600 dark:text-red-400 list-disc list-inside space-y-1">
+            <li>Transactions and budgets</li>
+            <li>Categories and profiles</li>
+            <li>Activity logs</li>
+          </ul>
+        </div>
+        <div class="flex items-center gap-3 rounded-xl border border-ink-100 dark:border-ink-800 p-3">
+          <span
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink-900 text-sm font-semibold text-white dark:bg-ink-100 dark:text-ink-900"
+          >
+            {{ (deleting.fullName || deleting.email || 'U').slice(0, 2).toUpperCase() }}
+          </span>
+          <div class="min-w-0">
+            <p class="truncate text-sm font-medium text-ink-900 dark:text-ink-50">{{ deleting.fullName || '—' }}</p>
+            <p class="truncate text-xs text-ink-500 dark:text-ink-400">{{ deleting.email }}</p>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-1">
+          <Button variant="ghost" :disabled="deletingUser" @click="deleteOpen = false">Cancel</Button>
+          <Button variant="danger" :disabled="deletingUser" @click="confirmDelete">
+            {{ deletingUser ? 'Deleting...' : 'Delete User' }}
+          </Button>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>

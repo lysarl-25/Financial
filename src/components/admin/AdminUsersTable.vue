@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { Shield, ShieldOff, Pencil, ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { Shield, ShieldOff, Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import type { UserRecord } from '@/types'
 import EmptyState from '@/components/common/EmptyState.vue'
 
 const props = defineProps<{ users: UserRecord[]; currentUserId: string | null }>()
-const emit = defineEmits<{ edit: [user: UserRecord] }>()
+const emit = defineEmits<{ edit: [user: UserRecord]; delete: [user: UserRecord] }>()
 
 const page = ref(1)
 const pageSize = 10
@@ -92,13 +92,23 @@ function formatDate(iso: string) {
                 {{ formatDate(u.createdAt) }}
               </td>
               <td class="px-5 py-3 text-right">
-                <button
-                  class="p-1.5 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-700 text-ink-500 hover:text-ink-700 dark:hover:text-ink-200"
-                  aria-label="Edit user"
-                  @click="emit('edit', u)"
-                >
-                  <Pencil :size="15" />
-                </button>
+                <div class="flex items-center justify-end gap-1">
+                  <button
+                    class="p-1.5 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-700 text-ink-500 hover:text-ink-700 dark:hover:text-ink-200"
+                    aria-label="Edit user"
+                    @click="emit('edit', u)"
+                  >
+                    <Pencil :size="15" />
+                  </button>
+                  <button
+                    v-if="u.id !== currentUserId"
+                    class="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-ink-400 hover:text-red-600 dark:hover:text-red-400"
+                    aria-label="Delete user"
+                    @click="emit('delete', u)"
+                  >
+                    <Trash2 :size="15" />
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>

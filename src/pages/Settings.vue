@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { Sun, Moon, LogOut } from 'lucide-vue-next'
+import { Sun, Moon, LogOut, Trash2 } from 'lucide-vue-next'
 import Input from '@/components/common/Input.vue'
 import Select from '@/components/common/Select.vue'
 import Button from '@/components/common/Button.vue'
+import Modal from '@/components/common/Modal.vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { useToastStore } from '@/stores/toastStore'
+import { deleteUser } from '@/services/supabase'
 
 const authStore = useAuthStore()
 const settingsStore = useSettingsStore()
@@ -62,6 +64,30 @@ async function handleSignOut() {
     router.replace('/login')
   } catch {
     toastStore.error('Could not sign out.')
+  }
+}
+
+const deleteOpen = ref(false)
+const deletingAccount = ref(false)
+
+function openDeleteAccount() {
+  deleteOpen.value = true
+}
+
+async function confirmDeleteAccount() {
+  if (!authStore.user) return
+
+  deletingAccount.value = true
+  try {
+    await deleteUser(authStore.user.id)
+    await authStore.signOut()
+    toastStore.success('Your account has been permanently deleted.')
+    router.replace('/login')
+  } catch {
+    toastStore.error('Could not delete account. Please try again or contact support.')
+  } finally {
+    deletingAccount.value = false
+    deleteOpen.value = false
   }
 }
 </script>
@@ -159,5 +185,38 @@ async function handleSignOut() {
         Sign Out
       </Button>
     </div>
+
+    <div class="card p-6 border-red-200 dark:border-red-900/50">
+      <h3 class="font-display text-base font-semibold text-red-600 dark:text-red-400 mb-2">Danger Zone</h3>
+      <p class="text-sm text-ink-500 dark:text-ink-400 mb-4">
+        Permanently delete your account and all associated data. This action cannot be undone.
+      </p>
+      <Button variant="danger" :disabled="authStore.loading" @click="openDeleteAccount">
+        <Trash2 :size="16" />
+        Delete Account
+      </Button>
+    </div>
+
+    <Modal :open="deleteOpen" title="Delete Account" @close="deleteOpen = false">
+      <div class="space-y-4">
+        <div class="rounded-xl bg-red-50 dark:bg-red-900/20 p-4">
+          <p class="text-sm text-red-700 dark:text-red-400">
+            <strong>Warning:</strong> This action cannot be undone. All your data will be permanently deleted, including:
+          </p>
+          <ul class="mt-2 text-sm text-red-600 dark:text-red-400 list-disc list-inside space-y-1">
+            <li>All transactions and budgets</li>
+            <li>Custom categories</li>
+            <li>Profile and settings</li>
+            <li>Activity history</li>
+          </ul>
+        </div>
+        <div class="flex justify-end gap-2 pt-1">
+          <Button variant="ghost" :disabled="deletingAccount" @click="deleteOpen = false">Cancel</Button>
+          <Button variant="danger" :disabled="deletingAccount" @click="confirmDeleteAccount">
+            {{ deletingAccount ? 'Deleting...' : 'Yes, Delete My Account' }}
+          </Button>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
