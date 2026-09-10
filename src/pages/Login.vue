@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { TrendingUp, Shield, BarChart3 } from 'lucide-vue-next'
 import Input from '@/components/common/Input.vue'
 import Button from '@/components/common/Button.vue'
 import { useAuthStore } from '@/stores/authStore'
@@ -138,31 +139,65 @@ function switchMode(newMode: 'signin' | 'signup') {
   errors.password = ''
   errors.confirmPassword = ''
 }
+
+const features = [
+  { icon: TrendingUp, text: 'Real-time transaction tracking' },
+  { icon: Shield, text: 'Bank-level data security' },
+  { icon: BarChart3, text: 'Insightful financial reports' },
+]
 </script>
 
 <template>
-  <div class="min-h-screen grid lg:grid-cols-[1.1fr_0.9fr] bg-[radial-gradient(circle_at_top_left,_rgba(15,157,112,0.18),_transparent_35%),linear-gradient(180deg,_#f7fbfa_0%,_#eef6f4_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(15,157,112,0.20),_transparent_35%),linear-gradient(180deg,_#051116_0%,_#08151a_100%)]">
+  <div
+    class="min-h-screen grid lg:grid-cols-[1.1fr_0.9fr] bg-[radial-gradient(circle_at_top_left,_rgba(15,157,112,0.18),_transparent_35%),linear-gradient(180deg,_#f7fbfa_0%,_#eef6f4_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(15,157,112,0.20),_transparent_35%),linear-gradient(180deg,_#051116_0%,_#08151a_100%)]"
+  >
     <!-- Left panel - branding -->
-    <div class="hidden lg:flex flex-col justify-between p-12 text-ink-900 dark:text-white">
+    <div class="hidden lg:flex flex-col justify-between p-12 text-ink-900 dark:text-white animate-login-fade-in-left">
       <div>
-        <div class="inline-flex items-center gap-2 rounded-full border border-ink-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 px-4 py-2 backdrop-blur">
-          <span class="h-2.5 w-2.5 rounded-full bg-income" />
+        <div
+          class="inline-flex items-center gap-2 rounded-full border border-ink-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 px-4 py-2 backdrop-blur"
+        >
+          <span class="h-2.5 w-2.5 rounded-full bg-income animate-pulse" />
           <span class="text-sm font-medium">Financial</span>
         </div>
-        <h1 class="mt-8 max-w-lg font-display text-5xl font-semibold leading-tight">
-          Track money with less friction and more clarity.
+
+        <h1 class="mt-8 max-w-lg font-display text-5xl font-semibold leading-[1.15]">
+          Track money with
+          <span class="text-income">less friction</span>
+          and more
+          <span class="text-income">clarity.</span>
         </h1>
-        <p class="mt-5 max-w-xl text-lg text-ink-600 dark:text-ink-300">
+
+        <p class="mt-5 max-w-xl text-lg text-ink-600 dark:text-ink-300 leading-relaxed">
           Sign in to manage transactions, budgets, categories, and reports backed by Supabase.
         </p>
+
+        <!-- Feature list -->
+        <div class="mt-8 space-y-3">
+          <div
+            v-for="(feature, i) in features"
+            :key="feature.text"
+            class="flex items-center gap-3 text-ink-600 dark:text-ink-300 animate-login-fade-in-left"
+            :style="{ animationDelay: `${200 + i * 100}ms` }"
+          >
+            <div
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-income/10 dark:bg-income/15"
+            >
+              <component :is="feature.icon" :size="16" class="text-income" />
+            </div>
+            <span class="text-sm font-medium">{{ feature.text }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Right panel - auth form -->
-    <div class="flex items-center justify-center p-6 sm:p-10">
-      <div class="w-full max-w-md rounded-3xl border border-ink-200/70 dark:border-white/10 bg-white/90 dark:bg-ink-900/85 p-6 sm:p-8 shadow-2xl shadow-ink-900/5 backdrop-blur">
+    <div class="flex items-center justify-center p-6 sm:p-10 animate-login-fade-in">
+      <div
+        class="w-full max-w-md rounded-3xl border border-ink-200/70 dark:border-white/10 bg-white/90 dark:bg-ink-900/85 p-6 sm:p-8 shadow-[0_2px_4px_rgba(18,37,34,0.04),0_8px_32px_rgba(18,37,34,0.08),0_0_0_1px_rgba(15,157,112,0.05)] dark:shadow-[0_2px_4px_rgba(0,0,0,0.2),0_8px_32px_rgba(0,0,0,0.3),0_0_0_1px_rgba(15,157,112,0.08)] backdrop-blur hover:shadow-[0_2px_4px_rgba(18,37,34,0.04),0_12px_40px_rgba(18,37,34,0.1),0_0_0_1px_rgba(15,157,112,0.08)] dark:hover:shadow-[0_2px_4px_rgba(0,0,0,0.2),0_12px_40px_rgba(0,0,0,0.35),0_0_0_1px_rgba(15,157,112,0.12)] transition-shadow duration-300"
+      >
         <!-- Mobile header -->
-        <div class="lg:hidden mb-8">
+        <div class="lg:hidden mb-8 animate-login-fade-in">
           <p class="text-xs uppercase tracking-[0.25em] text-ink-500 dark:text-ink-400">
             Financial
           </p>
@@ -175,17 +210,17 @@ function switchMode(newMode: 'signin' | 'signup') {
         </div>
 
         <!-- Tab switcher -->
-        <div class="flex rounded-2xl bg-ink-100 dark:bg-ink-800 p-1">
+        <div class="flex rounded-2xl bg-ink-100 dark:bg-ink-800 p-1 animate-login-fade-in delay-75">
           <button
-            class="flex-1 rounded-xl px-3 py-2 text-sm font-medium transition"
-            :class="mode === 'signin' ? 'bg-white dark:bg-ink-900 text-ink-900 dark:text-white shadow-sm' : 'text-ink-500'"
+            class="flex-1 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200"
+            :class="mode === 'signin' ? 'bg-white dark:bg-ink-900 text-ink-900 dark:text-white shadow-sm' : 'text-ink-500 hover:text-ink-700 dark:hover:text-ink-300'"
             @click="switchMode('signin')"
           >
             Sign in
           </button>
           <button
-            class="flex-1 rounded-xl px-3 py-2 text-sm font-medium transition"
-            :class="mode === 'signup' ? 'bg-white dark:bg-ink-900 text-ink-900 dark:text-white shadow-sm' : 'text-ink-500'"
+            class="flex-1 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200"
+            :class="mode === 'signup' ? 'bg-white dark:bg-ink-900 text-ink-900 dark:text-white shadow-sm' : 'text-ink-500 hover:text-ink-700 dark:hover:text-ink-300'"
             @click="switchMode('signup')"
           >
             Sign up
@@ -193,99 +228,124 @@ function switchMode(newMode: 'signin' | 'signup') {
         </div>
 
         <!-- Forgot password sent state -->
-        <div v-if="showForgotPassword && resetEmailSent" class="mt-6 text-center">
-          <div class="rounded-2xl bg-income-light dark:bg-income/10 p-6">
-            <p class="text-sm font-medium text-income-dark dark:text-income">
-              Reset link sent!
-            </p>
-            <p class="mt-2 text-sm text-ink-600 dark:text-ink-300">
-              Check your email <strong>{{ form.email }}</strong> for a password reset link.
-            </p>
-          </div>
-          <button
-            class="mt-4 text-sm font-medium text-ink-600 dark:text-ink-300 hover:text-ink-900 dark:hover:text-white transition-colors"
-            @click="showForgotPassword = false"
-          >
-            Back to sign in
-          </button>
-        </div>
-
-        <!-- Auth form -->
-        <form
-          v-else
-          class="mt-6 space-y-4"
-          @submit.prevent="submit"
-        >
-          <!-- Full name (signup only) -->
-          <Input
-            v-if="mode === 'signup'"
-            v-model="form.fullName"
-            label="Full Name"
-            placeholder="John Doe"
-            :error="errors.fullName"
-          />
-
-          <!-- Email -->
-          <Input
-            v-model="form.email"
-            type="email"
-            label="Email Address"
-            placeholder="you@example.com"
-            :error="errors.email"
-          />
-
-          <!-- Password -->
-          <Input
-            v-model="form.password"
-            type="password"
-            label="Password"
-            placeholder="Password"
-            :error="errors.password"
-          />
-
-          <!-- Confirm password (signup only) -->
-          <Input
-            v-if="mode === 'signup'"
-            v-model="form.confirmPassword"
-            type="password"
-            label="Confirm Password"
-            placeholder="Confirm password"
-            :error="errors.confirmPassword"
-          />
-
-          <!-- Forgot password link (signin only) -->
-          <div v-if="mode === 'signin'" class="flex justify-end">
+        <Transition name="login-form" mode="out-in">
+          <div v-if="showForgotPassword && resetEmailSent" key="forgot-sent" class="mt-6 text-center">
+            <div class="rounded-2xl bg-income-light dark:bg-income/10 p-6">
+              <p class="text-sm font-medium text-income-dark dark:text-income">
+                Reset link sent!
+              </p>
+              <p class="mt-2 text-sm text-ink-600 dark:text-ink-300">
+                Check your email <strong>{{ form.email }}</strong> for a password reset link.
+              </p>
+            </div>
             <button
-              type="button"
-              class="text-xs font-medium text-income hover:text-income-dark dark:text-income dark:hover:text-income-light transition-colors"
-              @click="handleForgotPassword"
+              class="mt-4 text-sm font-medium text-ink-600 dark:text-ink-300 hover:text-ink-900 dark:hover:text-white transition-colors"
+              @click="showForgotPassword = false"
             >
-              Forgot password?
+              Back to sign in
             </button>
           </div>
 
-          <!-- Keep session checkbox (signin only) -->
-          <label v-if="mode === 'signin'" class="flex items-center gap-2 cursor-pointer">
-            <input
-              v-model="form.keepSession"
-              type="checkbox"
-              class="h-4 w-4 rounded border-ink-300 dark:border-ink-600 text-income focus:ring-income/30 bg-white dark:bg-ink-900"
-            />
-            <span class="text-sm text-ink-600 dark:text-ink-300">Keep me signed in</span>
-          </label>
-
-          <!-- Submit button -->
-          <Button
-            type="submit"
-            class="w-full"
-            :disabled="authStore.loading"
+          <!-- Auth form -->
+          <form
+            v-else
+            key="auth-form"
+            class="mt-6 space-y-4"
+            @submit.prevent="submit"
           >
-            {{ authStore.loading ? 'Please wait...' : submitLabel }}
-          </Button>
-        </form>
+            <!-- Full name (signup only) -->
+            <div
+              v-if="mode === 'signup'"
+              class="animate-login-fade-in delay-75"
+            >
+              <Input
+                v-model="form.fullName"
+                label="Full Name"
+                placeholder="Your Name"
+                :error="errors.fullName"
+              />
+            </div>
+
+            <!-- Email -->
+            <div class="animate-login-fade-in delay-150">
+              <Input
+                v-model="form.email"
+                type="email"
+                label="Email Address"
+                placeholder="Email Address"
+                :error="errors.email"
+              />
+            </div>
+
+            <!-- Password -->
+            <div class="animate-login-fade-in delay-225">
+              <Input
+                v-model="form.password"
+                type="password"
+                label="Password"
+                placeholder="Password"
+                :error="errors.password"
+              />
+            </div>
+
+            <!-- Confirm password (signup only) -->
+            <div
+              v-if="mode === 'signup'"
+              class="animate-login-fade-in delay-300"
+            >
+              <Input
+                v-model="form.confirmPassword"
+                type="password"
+                label="Confirm Password"
+                placeholder="Confirm password"
+                :error="errors.confirmPassword"
+              />
+            </div>
+
+            <!-- Forgot password link (signin only) -->
+            <div v-if="mode === 'signin'" class="flex justify-end animate-login-fade-in delay-225">
+              <button
+                type="button"
+                class="text-xs font-medium text-income hover:text-income-dark dark:text-income dark:hover:text-income-light transition-colors"
+                @click="handleForgotPassword"
+              >
+                Forgot password?
+              </button>
+            </div>
+
+            <!-- Keep session checkbox (signin only) -->
+            <label
+              v-if="mode === 'signin'"
+              class="flex items-center gap-2.5 cursor-pointer group animate-login-fade-in delay-300"
+            >
+              <span class="relative flex h-4 w-4 shrink-0 items-center justify-center">
+                <input
+                  v-model="form.keepSession"
+                  type="checkbox"
+                  class="peer h-4 w-4 rounded border-ink-300 dark:border-ink-600 bg-white dark:bg-ink-900 text-income focus:ring-income/30 focus:ring-2 focus:ring-offset-0 transition-colors"
+                />
+              </span>
+              <span class="text-sm text-ink-600 dark:text-ink-300 group-hover:text-ink-800 dark:group-hover:text-ink-100 transition-colors">Keep me signed in</span>
+            </label>
+
+            <!-- Submit button -->
+            <div class="animate-login-fade-in delay-400">
+              <Button
+                type="submit"
+                class="w-full !py-2.5 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all duration-200"
+                :disabled="authStore.loading"
+              >
+                {{ authStore.loading ? 'Please wait...' : submitLabel }}
+              </Button>
+            </div>
+          </form>
+        </Transition>
 
         <!-- Switch mode link -->
-        <p v-if="!showForgotPassword || !resetEmailSent" class="mt-5 text-center text-sm text-ink-600 dark:text-ink-300">
+        <p
+          v-if="!showForgotPassword || !resetEmailSent"
+          class="mt-5 text-center text-sm text-ink-600 dark:text-ink-300 animate-login-fade-in delay-500"
+        >
           <template v-if="mode === 'signin'">
             Don't have an account?
             <button
@@ -310,9 +370,25 @@ function switchMode(newMode: 'signin' | 'signup') {
 
         <!-- Terms / notice -->
         <p class="mt-5 text-xs leading-5 text-ink-500 dark:text-ink-400 text-center">
-          By continuing, you agree to use the app with your own Supabase project and data.
+          By continuing, you agree to use this application with your own project and data.
         </p>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+:deep(.input:focus) {
+  --tw-ring-color: rgba(15, 157, 112, 0.25);
+  border-color: rgba(15, 157, 112, 0.4);
+}
+
+:deep(.input:focus:not(:focus-visible)) {
+  outline: none;
+}
+
+:deep(.btn-primary),
+:deep(.btn) {
+  box-shadow: 0 1px 2px rgba(18, 37, 34, 0.08);
+}
+</style>
