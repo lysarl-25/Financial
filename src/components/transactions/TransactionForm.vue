@@ -21,7 +21,7 @@ const form = reactive({
   description: props.initial?.description || '',
   categoryId: props.initial?.categoryId || '',
   date: props.initial?.date || todayISO(),
-  paymentMethod: props.initial?.paymentMethod || 'Credit Card',
+  paymentMethod: props.initial?.paymentMethod || 'Bank Transfer',
   note: props.initial?.note || '',
 })
 
