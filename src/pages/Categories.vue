@@ -83,6 +83,8 @@ const iconOptions = [
   'Soup',
   'Medal',
   'Egg',
+  'Drumstick',
+  'Beef'
 ]
 const colorOptions = ['#0f9d70', '#2e5b54', '#3f716a', '#0b7a58', '#5f8f85', '#e0603f', '#b8482c', '#d9784f', '#c25a38', '#e2825f']
 
