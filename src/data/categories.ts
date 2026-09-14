@@ -11,13 +11,13 @@ export const categories: Category[] = [
 
   // Expense categories
   { id: 'cat-exp-food', name: 'Food', type: 'expense', icon: 'UtensilsCrossed', color: '#e0603f' },
-  { id: 'cat-exp-transport', name: 'Transportation', type: 'expense', icon: 'Car', color: '#b8482c' },
-  { id: 'cat-exp-shopping', name: 'Shopping', type: 'expense', icon: 'ShoppingBag', color: '#d9784f' },
-  { id: 'cat-exp-bills', name: 'Bills', type: 'expense', icon: 'Receipt', color: '#c25a38' },
-  { id: 'cat-exp-entertainment', name: 'Entertainment', type: 'expense', icon: 'Film', color: '#e2825f' },
-  { id: 'cat-exp-health', name: 'Health', type: 'expense', icon: 'HeartPulse', color: '#cf6845' },
-  { id: 'cat-exp-education', name: 'Education', type: 'expense', icon: 'GraduationCap', color: '#a8492e' },
-  { id: 'cat-exp-rent', name: 'Rent', type: 'expense', icon: 'Home', color: '#9c4429' },
-  { id: 'cat-exp-travel', name: 'Travel', type: 'expense', icon: 'Plane', color: '#e6957a' },
-  { id: 'cat-exp-other', name: 'Other', type: 'expense', icon: 'MoreHorizontal', color: '#c99280' },
+  { id: 'cat-exp-transport', name: 'Transportation', type: 'expense', icon: 'Car', color: '#2563eb' },
+  { id: 'cat-exp-shopping', name: 'Shopping', type: 'expense', icon: 'ShoppingBag', color: '#ec4899' },
+  { id: 'cat-exp-bills', name: 'Bills', type: 'expense', icon: 'Receipt', color: '#8b5cf6' },
+  { id: 'cat-exp-entertainment', name: 'Entertainment', type: 'expense', icon: 'Film', color: '#f59e0b' },
+  { id: 'cat-exp-health', name: 'Health', type: 'expense', icon: 'HeartPulse', color: '#ef4444' },
+  { id: 'cat-exp-education', name: 'Education', type: 'expense', icon: 'GraduationCap', color: '#14b8a6' },
+  { id: 'cat-exp-rent', name: 'Rent', type: 'expense', icon: 'Home', color: '#92400e' },
+  { id: 'cat-exp-travel', name: 'Travel', type: 'expense', icon: 'Plane', color: '#06b6d4' },
+  { id: 'cat-exp-other', name: 'Other', type: 'expense', icon: 'MoreHorizontal', color: '#6b7280' },
 ]

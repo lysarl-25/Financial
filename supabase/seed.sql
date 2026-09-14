@@ -41,15 +41,15 @@ begin
     ('cat-inc-bonus', 'Bonus', 'income', 'Gift', '#5f8f85'),
     ('cat-inc-other', 'Other', 'income', 'CircleDollarSign', '#8fb4ac'),
     ('cat-exp-food', 'Food', 'expense', 'UtensilsCrossed', '#e0603f'),
-    ('cat-exp-transport', 'Transportation', 'expense', 'Car', '#b8482c'),
-    ('cat-exp-shopping', 'Shopping', 'expense', 'ShoppingBag', '#d9784f'),
-    ('cat-exp-bills', 'Bills', 'expense', 'Receipt', '#c25a38'),
-    ('cat-exp-entertainment', 'Entertainment', 'expense', 'Film', '#e2825f'),
-    ('cat-exp-health', 'Health', 'expense', 'HeartPulse', '#cf6845'),
-    ('cat-exp-education', 'Education', 'expense', 'GraduationCap', '#a8492e'),
-    ('cat-exp-rent', 'Rent', 'expense', 'Home', '#9c4429'),
-    ('cat-exp-travel', 'Travel', 'expense', 'Plane', '#e6957a'),
-    ('cat-exp-other', 'Other', 'expense', 'MoreHorizontal', '#c99280')
+    ('cat-exp-transport', 'Transportation', 'expense', 'Car', '#2563eb'),
+    ('cat-exp-shopping', 'Shopping', 'expense', 'ShoppingBag', '#ec4899'),
+    ('cat-exp-bills', 'Bills', 'expense', 'Receipt', '#8b5cf6'),
+    ('cat-exp-entertainment', 'Entertainment', 'expense', 'Film', '#f59e0b'),
+    ('cat-exp-health', 'Health', 'expense', 'HeartPulse', '#ef4444'),
+    ('cat-exp-education', 'Education', 'expense', 'GraduationCap', '#14b8a6'),
+    ('cat-exp-rent', 'Rent', 'expense', 'Home', '#92400e'),
+    ('cat-exp-travel', 'Travel', 'expense', 'Plane', '#06b6d4'),
+    ('cat-exp-other', 'Other', 'expense', 'MoreHorizontal', '#6b7280')
     ) as seed_categories(old_id, name, type, icon, color);
 
     with seed_budgets(old_category_id, amount, month) as (
@@ -74,15 +74,15 @@ begin
     ('cat-inc-bonus', 'Bonus', 'income', 'Gift', '#5f8f85'),
     ('cat-inc-other', 'Other', 'income', 'CircleDollarSign', '#8fb4ac'),
     ('cat-exp-food', 'Food', 'expense', 'UtensilsCrossed', '#e0603f'),
-    ('cat-exp-transport', 'Transportation', 'expense', 'Car', '#b8482c'),
-    ('cat-exp-shopping', 'Shopping', 'expense', 'ShoppingBag', '#d9784f'),
-    ('cat-exp-bills', 'Bills', 'expense', 'Receipt', '#c25a38'),
-    ('cat-exp-entertainment', 'Entertainment', 'expense', 'Film', '#e2825f'),
-    ('cat-exp-health', 'Health', 'expense', 'HeartPulse', '#cf6845'),
-    ('cat-exp-education', 'Education', 'expense', 'GraduationCap', '#a8492e'),
-    ('cat-exp-rent', 'Rent', 'expense', 'Home', '#9c4429'),
-    ('cat-exp-travel', 'Travel', 'expense', 'Plane', '#e6957a'),
-    ('cat-exp-other', 'Other', 'expense', 'MoreHorizontal', '#c99280')
+    ('cat-exp-transport', 'Transportation', 'expense', 'Car', '#2563eb'),
+    ('cat-exp-shopping', 'Shopping', 'expense', 'ShoppingBag', '#ec4899'),
+    ('cat-exp-bills', 'Bills', 'expense', 'Receipt', '#8b5cf6'),
+    ('cat-exp-entertainment', 'Entertainment', 'expense', 'Film', '#f59e0b'),
+    ('cat-exp-health', 'Health', 'expense', 'HeartPulse', '#ef4444'),
+    ('cat-exp-education', 'Education', 'expense', 'GraduationCap', '#14b8a6'),
+    ('cat-exp-rent', 'Rent', 'expense', 'Home', '#92400e'),
+    ('cat-exp-travel', 'Travel', 'expense', 'Plane', '#06b6d4'),
+    ('cat-exp-other', 'Other', 'expense', 'MoreHorizontal', '#6b7280')
       ) as s(old_id, name, type, icon, color)
       join public.categories i
         on i.user_id = target_user_id
@@ -245,15 +245,15 @@ begin
     ('cat-inc-bonus', 'Bonus', 'income', 'Gift', '#5f8f85'),
     ('cat-inc-other', 'Other', 'income', 'CircleDollarSign', '#8fb4ac'),
     ('cat-exp-food', 'Food', 'expense', 'UtensilsCrossed', '#e0603f'),
-    ('cat-exp-transport', 'Transportation', 'expense', 'Car', '#b8482c'),
-    ('cat-exp-shopping', 'Shopping', 'expense', 'ShoppingBag', '#d9784f'),
-    ('cat-exp-bills', 'Bills', 'expense', 'Receipt', '#c25a38'),
-    ('cat-exp-entertainment', 'Entertainment', 'expense', 'Film', '#e2825f'),
-    ('cat-exp-health', 'Health', 'expense', 'HeartPulse', '#cf6845'),
-    ('cat-exp-education', 'Education', 'expense', 'GraduationCap', '#a8492e'),
-    ('cat-exp-rent', 'Rent', 'expense', 'Home', '#9c4429'),
-    ('cat-exp-travel', 'Travel', 'expense', 'Plane', '#e6957a'),
-    ('cat-exp-other', 'Other', 'expense', 'MoreHorizontal', '#c99280')
+    ('cat-exp-transport', 'Transportation', 'expense', 'Car', '#2563eb'),
+    ('cat-exp-shopping', 'Shopping', 'expense', 'ShoppingBag', '#ec4899'),
+    ('cat-exp-bills', 'Bills', 'expense', 'Receipt', '#8b5cf6'),
+    ('cat-exp-entertainment', 'Entertainment', 'expense', 'Film', '#f59e0b'),
+    ('cat-exp-health', 'Health', 'expense', 'HeartPulse', '#ef4444'),
+    ('cat-exp-education', 'Education', 'expense', 'GraduationCap', '#14b8a6'),
+    ('cat-exp-rent', 'Rent', 'expense', 'Home', '#92400e'),
+    ('cat-exp-travel', 'Travel', 'expense', 'Plane', '#06b6d4'),
+    ('cat-exp-other', 'Other', 'expense', 'MoreHorizontal', '#6b7280')
       ) as s(old_id, name, type, icon, color)
       join public.categories i
         on i.user_id = target_user_id
