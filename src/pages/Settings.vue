@@ -213,7 +213,8 @@ async function confirmDeleteAccount() {
         <div class="flex justify-end gap-2 pt-1">
           <Button variant="ghost" :disabled="deletingAccount" @click="deleteOpen = false">Cancel</Button>
           <Button variant="danger" :disabled="deletingAccount" @click="confirmDeleteAccount">
-            {{ deletingAccount ? 'Deleting...' : 'Yes, Delete My Account' }}
+            <span v-if="deletingAccount" class="inline-block h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+            {{ deletingAccount ? 'Deleting Account…' : 'Yes, Delete My Account' }}
           </Button>
         </div>
       </div>

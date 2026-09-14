@@ -22,6 +22,7 @@ const formOpen = ref(false)
 const editing = ref<Budget | undefined>(undefined)
 const deletingId = ref<string | null>(null)
 const saving = ref(false)
+const deleting = ref(false)
 
 onMounted(() => {
   if (!transactionStore.loaded) transactionStore.fetchAll()
@@ -56,12 +57,14 @@ async function handleSubmit(payload: Omit<Budget, 'id'>) {
 
 async function confirmDelete() {
   if (!deletingId.value) return
+  deleting.value = true
   try {
     await budgetStore.remove(deletingId.value)
     toastStore.success('Budget deleted successfully.')
   } catch {
     toastStore.error('Could not delete budget.')
   } finally {
+    deleting.value = false
     deletingId.value = null
   }
 }
@@ -117,6 +120,7 @@ async function confirmDelete() {
 
     <ConfirmDialog
       :open="!!deletingId"
+      :loading="deleting"
       message="This will permanently delete the budget. This action cannot be undone."
       @confirm="confirmDelete"
       @cancel="deletingId = null"

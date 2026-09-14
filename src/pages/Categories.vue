@@ -21,6 +21,7 @@ const editing = ref<Category | undefined>(undefined)
 const deletingId = ref<string | null>(null)
 const deleteBlocked = ref(false)
 const saving = ref(false)
+const deleting = ref(false)
 
 const iconOptions = [
   'Wallet', 
@@ -147,14 +148,21 @@ function requestDelete(id: string) {
 
 async function confirmDelete() {
   if (!deletingId.value) return
-  const ok = await categoryStore.remove(deletingId.value)
-  if (!ok) {
-    deleteBlocked.value = true
-    toastStore.error('This category is used by existing transactions and cannot be deleted.')
-    return
+  deleting.value = true
+  try {
+    const ok = await categoryStore.remove(deletingId.value)
+    if (!ok) {
+      deleteBlocked.value = true
+      toastStore.error('This category is used by existing transactions and cannot be deleted.')
+      return
+    }
+    toastStore.success('Category deleted successfully.')
+    deletingId.value = null
+  } catch {
+    toastStore.error('Something went wrong. Please try again.')
+  } finally {
+    deleting.value = false
   }
-  toastStore.success('Category deleted successfully.')
-  deletingId.value = null
 }
 </script>
 
@@ -254,6 +262,7 @@ async function confirmDelete() {
 
     <ConfirmDialog
       :open="!!deletingId && !deleteBlocked"
+      :loading="deleting"
       message="This will permanently delete the category. This action cannot be undone."
       @confirm="confirmDelete"
       @cancel="deletingId = null"

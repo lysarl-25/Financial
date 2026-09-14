@@ -241,7 +241,8 @@ const activeCount = computed(() => users.value.filter((u) => u.isActive).length)
         <div class="flex justify-end gap-2 pt-1">
           <Button variant="ghost" :disabled="deletingUser" @click="deleteOpen = false">Cancel</Button>
           <Button variant="danger" :disabled="deletingUser" @click="confirmDelete">
-            {{ deletingUser ? 'Deleting...' : 'Delete User' }}
+            <span v-if="deletingUser" class="inline-block h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+            {{ deletingUser ? 'Deleting…' : 'Delete User' }}
           </Button>
         </div>
       </div>
