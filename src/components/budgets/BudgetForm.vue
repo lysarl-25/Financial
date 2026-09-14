@@ -7,7 +7,7 @@ import { useCategoryStore } from '@/stores/categoryStore'
 import { useBudgetStore } from '@/stores/budgetStore'
 import type { Budget } from '@/types'
 
-const props = defineProps<{ initial?: Partial<Budget> }>()
+const props = defineProps<{ initial?: Partial<Budget>; saving?: boolean }>()
 const emit = defineEmits<{ submit: [payload: Omit<Budget, 'id'>]; cancel: [] }>()
 
 const categoryStore = useCategoryStore()
@@ -50,8 +50,11 @@ function handleSubmit() {
     <Select v-model="form.categoryId" label="Category" :options="categoryOptions" :error="errors.categoryId" />
     <Input v-model="form.amount" type="number" step="0.01" min="0" label="Monthly Budget Amount" placeholder="0.00" :error="errors.amount" />
     <div class="flex justify-end gap-3 pt-2">
-      <Button variant="secondary" type="button" @click="emit('cancel')">Cancel</Button>
-      <Button type="submit">Save Budget</Button>
+      <Button variant="secondary" type="button" :disabled="saving" @click="emit('cancel')">Cancel</Button>
+      <Button type="submit" :disabled="saving">
+        <span v-if="saving" class="inline-block h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+        {{ saving ? 'Saving Budget…' : 'Save Budget' }}
+      </Button>
     </div>
   </form>
 </template>

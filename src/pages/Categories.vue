@@ -20,6 +20,7 @@ const formOpen = ref(false)
 const editing = ref<Category | undefined>(undefined)
 const deletingId = ref<string | null>(null)
 const deleteBlocked = ref(false)
+const saving = ref(false)
 
 const iconOptions = [
   'Wallet', 
@@ -122,6 +123,7 @@ async function handleSubmit() {
     errors.name = 'Category name is required.'
     return
   }
+  saving.value = true
   try {
     if (editing.value) {
       await categoryStore.update(editing.value.id, { name: form.name.trim(), type: form.type, icon: form.icon, color: form.color })
@@ -133,6 +135,8 @@ async function handleSubmit() {
     formOpen.value = false
   } catch {
     toastStore.error('Something went wrong. Please try again.')
+  } finally {
+    saving.value = false
   }
 }
 
@@ -239,8 +243,11 @@ async function confirmDelete() {
           </div>
         </div>
         <div class="flex justify-end gap-3 pt-2">
-          <Button variant="secondary" type="button" @click="formOpen = false">Cancel</Button>
-          <Button type="submit">Save Category</Button>
+          <Button variant="secondary" type="button" :disabled="saving" @click="formOpen = false">Cancel</Button>
+          <Button type="submit" :disabled="saving">
+            <span v-if="saving" class="inline-block h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+            {{ saving ? 'Saving Category…' : 'Save Category' }}
+          </Button>
         </div>
       </form>
     </Modal>

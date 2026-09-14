@@ -10,6 +10,7 @@ import { todayISO } from '@/utils/format'
 const props = defineProps<{
   initial?: Partial<Transaction>
   forcedType?: TransactionType
+  saving?: boolean
 }>()
 const emit = defineEmits<{ submit: [payload: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>]; cancel: [] }>()
 
@@ -132,8 +133,11 @@ function handleSubmit() {
     <Input v-model="form.note" label="Note (optional)" placeholder="Add a note" />
 
     <div class="flex justify-end gap-3 pt-2">
-      <Button variant="secondary" type="button" @click="emit('cancel')">Cancel</Button>
-      <Button type="submit">Save</Button>
+      <Button variant="secondary" type="button" :disabled="saving" @click="emit('cancel')">Cancel</Button>
+      <Button type="submit" :disabled="saving">
+        <span v-if="saving" class="inline-block h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+        {{ saving ? 'Saving…' : 'Save' }}
+      </Button>
     </div>
   </form>
 </template>
