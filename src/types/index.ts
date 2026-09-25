@@ -71,3 +71,27 @@ export interface AppSettings {
     largeTransactions: boolean
   }
 }
+
+export type UserRole = 'user' | 'admin'
+
+export interface UserRecord {
+  id: string
+  fullName: string
+  role: UserRole
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+  email: string
+}
+
+export interface ActivityLog {
+  id: string
+  userId: string
+  action: string
+  entityType: string
+  entityId: string | null
+  metadata: Record<string, unknown> | null
+  createdAt: string
+  userFullName: string
+  userEmail: string
+}

@@ -20,6 +20,8 @@ const formOpen = ref(false)
 const editing = ref<Category | undefined>(undefined)
 const deletingId = ref<string | null>(null)
 const deleteBlocked = ref(false)
+const saving = ref(false)
+const deleting = ref(false)
 
 const iconOptions = [
   'Wallet', 
@@ -83,16 +85,31 @@ const iconOptions = [
   'Soup',
   'Medal',
   'Egg',
+  'Drumstick',
+  'Beef'
 ]
-const colorOptions = ['#0f9d70', '#2e5b54', '#3f716a', '#0b7a58', '#5f8f85', '#e0603f', '#b8482c', '#d9784f', '#c25a38', '#e2825f']
+const colorOptions = [
+  '#0f9d70', '#2e5b54', '#3f716a', '#0b7a58', '#5f8f85', '#8fb4ac',
+  '#e0603f', '#f97316', '#f59e0b', '#eab308', '#92400e', '#6b7280',
+  '#14b8a6', '#06b6d4', '#2563eb', '#0ea5e9', '#22c55e',
+  '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#ef4444',
+]
 
 const form = reactive({ name: '', type: 'expense' as TransactionType, icon: 'Tag', color: colorOptions[0] })
 const errors = reactive({ name: '' })
 
 const list = computed(() => (activeTab.value === 'income' ? categoryStore.incomeCategories : categoryStore.expenseCategories))
 
+const isCustomColor = computed(() => !!form.color && !colorOptions.includes(form.color))
+
 function iconFor(name?: string) {
   return (Icons as any)[name || 'Tag'] || Icons.Tag
+}
+
+function nextUnusedColor(type: TransactionType): string {
+  const used = new Set(categoryStore.categories.filter((c) => c.type === type).map((c) => c.color))
+  const preferred = [...colorOptions].sort((a, b) => Number(used.has(a)) - Number(used.has(b)))
+  return preferred[0] || colorOptions[0]
 }
 
 function openCreate() {
@@ -100,7 +117,7 @@ function openCreate() {
   form.name = ''
   form.type = activeTab.value
   form.icon = 'Tag'
-  form.color = colorOptions[0]
+  form.color = nextUnusedColor(activeTab.value)
   errors.name = ''
   formOpen.value = true
 }
@@ -120,6 +137,7 @@ async function handleSubmit() {
     errors.name = 'Category name is required.'
     return
   }
+  saving.value = true
   try {
     if (editing.value) {
       await categoryStore.update(editing.value.id, { name: form.name.trim(), type: form.type, icon: form.icon, color: form.color })
@@ -131,6 +149,8 @@ async function handleSubmit() {
     formOpen.value = false
   } catch {
     toastStore.error('Something went wrong. Please try again.')
+  } finally {
+    saving.value = false
   }
 }
 
@@ -141,14 +161,21 @@ function requestDelete(id: string) {
 
 async function confirmDelete() {
   if (!deletingId.value) return
-  const ok = await categoryStore.remove(deletingId.value)
-  if (!ok) {
-    deleteBlocked.value = true
-    toastStore.error('This category is used by existing transactions and cannot be deleted.')
-    return
+  deleting.value = true
+  try {
+    const ok = await categoryStore.remove(deletingId.value)
+    if (!ok) {
+      deleteBlocked.value = true
+      toastStore.error('This category is used by existing transactions and cannot be deleted.')
+      return
+    }
+    toastStore.success('Category deleted successfully.')
+    deletingId.value = null
+  } catch {
+    toastStore.error('Something went wrong. Please try again.')
+  } finally {
+    deleting.value = false
   }
-  toastStore.success('Category deleted successfully.')
-  deletingId.value = null
 }
 </script>
 
@@ -224,7 +251,7 @@ async function confirmDelete() {
         </div>
         <div>
           <label class="label">Color</label>
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap items-center gap-2">
             <button
               v-for="color in colorOptions"
               :key="color"
@@ -234,17 +261,39 @@ async function confirmDelete() {
               :style="{ backgroundColor: color }"
               @click="form.color = color"
             />
+            <div
+              class="relative h-8 w-8 shrink-0 overflow-hidden rounded-full border-2 transition-transform cursor-pointer"
+              :class="isCustomColor ? 'border-ink-800 dark:border-white scale-110' : 'border-transparent'"
+              title="Custom color"
+            >
+              <span
+                v-if="!isCustomColor"
+                class="absolute inset-0"
+                :style="{ background: 'conic-gradient(from 0deg, #f43f5e, #f59e0b, #84cc16, #06b6d4, #6366f1, #d946ef, #f43f5e)' }"
+              />
+              <span v-else class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white mix-blend-difference">✓</span>
+              <input
+                type="color"
+                class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                :value="form.color"
+                @input="form.color = ($event.target as HTMLInputElement).value"
+              />
+            </div>
           </div>
         </div>
         <div class="flex justify-end gap-3 pt-2">
-          <Button variant="secondary" type="button" @click="formOpen = false">Cancel</Button>
-          <Button type="submit">Save Category</Button>
+          <Button variant="secondary" type="button" :disabled="saving" @click="formOpen = false">Cancel</Button>
+          <Button type="submit" :disabled="saving">
+            <span v-if="saving" class="inline-block h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+            {{ saving ? 'Saving Category…' : 'Save Category' }}
+          </Button>
         </div>
       </form>
     </Modal>
 
     <ConfirmDialog
       :open="!!deletingId && !deleteBlocked"
+      :loading="deleting"
       message="This will permanently delete the category. This action cannot be undone."
       @confirm="confirmDelete"
       @cancel="deletingId = null"

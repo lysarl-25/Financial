@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { Transaction, TransactionFilters } from '@/types'
 import { transactionService } from '@/services/transactionService'
+import { logActivity } from '@/services/supabase'
 import { totalIncome, totalExpenses, balance, sumByCategory } from '@/utils/calculations'
 
 const defaultFilters: TransactionFilters = {
@@ -72,17 +73,36 @@ export const useTransactionStore = defineStore('transaction', {
     async create(payload: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>) {
       const record = await transactionService.create(payload)
       this.transactions = [record, ...this.transactions]
+      await logActivity({
+        action: 'transaction.create',
+        entityType: 'transaction',
+        entityId: record.id,
+        metadata: { description: record.description, amount: record.amount, type: record.type },
+      })
       return record
     },
     async update(id: string, payload: Partial<Omit<Transaction, 'id' | 'createdAt'>>) {
       const record = await transactionService.update(id, payload)
       const idx = this.transactions.findIndex((t) => t.id === id)
       if (idx !== -1) this.transactions[idx] = record
+      await logActivity({
+        action: 'transaction.update',
+        entityType: 'transaction',
+        entityId: id,
+        metadata: { description: record.description, amount: record.amount },
+      })
       return record
     },
     async remove(id: string) {
+      const target = this.transactions.find((t) => t.id === id)
       await transactionService.remove(id)
       this.transactions = this.transactions.filter((t) => t.id !== id)
+      await logActivity({
+        action: 'transaction.delete',
+        entityType: 'transaction',
+        entityId: id,
+        metadata: target ? { description: target.description } : undefined,
+      })
     },
     setFilters(partial: Partial<TransactionFilters>) {
       this.filters = { ...this.filters, ...partial }

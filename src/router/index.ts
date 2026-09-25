@@ -19,6 +19,7 @@ const router = createRouter({
         { path: 'reports', name: 'reports', component: () => import('@/pages/Reports.vue') },
         { path: 'categories', name: 'categories', component: () => import('@/pages/Categories.vue') },
         { path: 'settings', name: 'settings', component: () => import('@/pages/Settings.vue') },
+        { path: 'admin', name: 'admin', component: () => import('@/pages/Admin.vue'), meta: { requiresAdmin: true } },
       ],
     },
     { path: '/:pathMatch(.*)*', redirect: '/dashboard' },
@@ -37,6 +38,10 @@ router.beforeEach(async (to) => {
 
   if (to.path !== '/login' && !authStore.isAuthenticated) {
     return { path: '/login', query: to.fullPath !== '/' ? { redirect: to.fullPath } : undefined }
+  }
+
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    return { path: '/dashboard' }
   }
 
   return true

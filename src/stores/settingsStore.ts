@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import type { User } from '@supabase/supabase-js'
 import type { AppSettings } from '@/types'
-import { defaultNotifications, defaultSettings, fromProfileRow, supabase, toProfileUpsert } from '@/services/supabase'
+import { defaultNotifications, defaultSettings, fromProfileRow, logActivity, supabase, toProfileUpsert } from '@/services/supabase'
 
 interface SettingsState extends AppSettings {
   profileId: string | null
@@ -72,17 +72,24 @@ export const useSettingsStore = defineStore('settings', {
     async update(payload: Partial<AppSettings>) {
       Object.assign(this, payload)
       await this.persist()
+      if (payload.profileName !== undefined) {
+        await logActivity({ action: 'profile.update', entityType: 'settings', metadata: { profileName: payload.profileName } })
+      } else {
+        await logActivity({ action: 'preferences.update', entityType: 'settings', metadata: { changed: Object.keys(payload) } })
+      }
     },
 
     async updateNotifications(payload: Partial<AppSettings['notifications']>) {
       this.notifications = { ...this.notifications, ...payload }
       await this.persist()
+      await logActivity({ action: 'notifications.update', entityType: 'settings', metadata: payload })
     },
 
     async toggleTheme() {
       this.theme = this.theme === 'light' ? 'dark' : 'light'
       this.applyTheme()
       await this.persist()
+      await logActivity({ action: 'theme.toggle', entityType: 'settings', metadata: { theme: this.theme } })
     },
 
     applyTheme() {

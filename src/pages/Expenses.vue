@@ -26,8 +26,12 @@ const total = computed(() => filteredExpenses.value.reduce((s, t) => s + t.amoun
 <template>
   <div class="space-y-5">
     <div>
-      <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">Expenses Overview</h2>
-      <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">Track and manage your spending to better understand where your money goes.</p>
+      <h2 class="font-display text-xl font-semibold text-ink-900 dark:text-ink-50">
+        Expenses Overview
+      </h2>
+      <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">
+        Track and manage your spending to better understand where your money goes.
+      </p>
     </div>
 
     <div class="card p-5 flex items-center justify-between bg-expense-light/40 dark:bg-expense/10 border-expense/20">

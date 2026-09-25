@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import {
   LayoutDashboard,
@@ -9,24 +10,33 @@ import {
   BarChart3,
   Tags,
   Settings as SettingsIcon,
+  ShieldCheck,
   X,
-  BookText,
+  DollarSign,
 } from 'lucide-vue-next'
+import { useAuthStore } from '@/stores/authStore'
 
 defineProps<{ open: boolean }>()
 const emit = defineEmits<{ close: [] }>()
 const route = useRoute()
+const authStore = useAuthStore()
 
-const nav = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
-  { to: '/income', label: 'Income', icon: TrendingUp },
-  { to: '/expenses', label: 'Expenses', icon: TrendingDown },
-  { to: '/budgets', label: 'Budgets', icon: PiggyBank },
-  { to: '/reports', label: 'Reports', icon: BarChart3 },
-  { to: '/categories', label: 'Categories', icon: Tags },
-  { to: '/settings', label: 'Settings', icon: SettingsIcon },
-]
+const nav = computed(() => {
+  const items = [
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
+    { to: '/income', label: 'Income', icon: TrendingUp },
+    { to: '/expenses', label: 'Expenses', icon: TrendingDown },
+    { to: '/budgets', label: 'Budgets', icon: PiggyBank },
+    { to: '/reports', label: 'Reports', icon: BarChart3 },
+    { to: '/categories', label: 'Categories', icon: Tags },
+  ]
+  if (authStore.isAdmin) {
+    items.push({ to: '/admin', label: 'User Management', icon: ShieldCheck })
+  }
+  items.push({ to: '/settings', label: 'Settings', icon: SettingsIcon })
+  return items
+})
 
 function isActive(to: string) {
   return route.path.startsWith(to)
@@ -43,7 +53,7 @@ function isActive(to: string) {
             <div class="h-16 flex items-center justify-between px-5 border-b border-ink-100 dark:border-ink-800">
               <div class="flex items-center gap-2.5">
                 <div class="h-8 w-8 rounded-lg bg-ink-900 dark:bg-ink-100 flex items-center justify-center">
-                  <BookText :size="16" class="text-income" />
+                  <DollarSign :size="16" class="text-income" />
                 </div>
                 <span class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">Financial</span>
               </div>

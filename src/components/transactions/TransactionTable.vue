@@ -37,6 +37,7 @@ watch(
 const editing = ref<Transaction | undefined>(undefined)
 const editOpen = ref(false)
 const deletingId = ref<string | null>(null)
+const deleting = ref(false)
 
 function openEdit(t: Transaction) {
   editing.value = t
@@ -45,12 +46,14 @@ function openEdit(t: Transaction) {
 
 async function confirmDelete() {
   if (!deletingId.value) return
+  deleting.value = true
   try {
     await transactionStore.remove(deletingId.value)
     toastStore.success('Transaction deleted successfully.')
   } catch {
     toastStore.error('Could not delete transaction.')
   } finally {
+    deleting.value = false
     deletingId.value = null
   }
 }
@@ -125,6 +128,7 @@ async function confirmDelete() {
     <TransactionModal :open="editOpen" mode="edit" :transaction="editing" @close="editOpen = false" />
     <ConfirmDialog
       :open="!!deletingId"
+      :loading="deleting"
       message="This will permanently delete the transaction. This action cannot be undone."
       @confirm="confirmDelete"
       @cancel="deletingId = null"

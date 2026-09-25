@@ -21,6 +21,8 @@ const toastStore = useToastStore()
 const formOpen = ref(false)
 const editing = ref<Budget | undefined>(undefined)
 const deletingId = ref<string | null>(null)
+const saving = ref(false)
+const deleting = ref(false)
 
 onMounted(() => {
   if (!transactionStore.loaded) transactionStore.fetchAll()
@@ -36,6 +38,7 @@ function openEdit(b: Budget) {
 }
 
 async function handleSubmit(payload: Omit<Budget, 'id'>) {
+  saving.value = true
   try {
     if (editing.value) {
       await budgetStore.update(editing.value.id, payload)
@@ -47,17 +50,21 @@ async function handleSubmit(payload: Omit<Budget, 'id'>) {
     formOpen.value = false
   } catch {
     toastStore.error('Something went wrong. Please try again.')
+  } finally {
+    saving.value = false
   }
 }
 
 async function confirmDelete() {
   if (!deletingId.value) return
+  deleting.value = true
   try {
     await budgetStore.remove(deletingId.value)
     toastStore.success('Budget deleted successfully.')
   } catch {
     toastStore.error('Could not delete budget.')
   } finally {
+    deleting.value = false
     deletingId.value = null
   }
 }
@@ -108,11 +115,12 @@ async function confirmDelete() {
     </div>
 
     <Modal :open="formOpen" :title="editing ? 'Edit Budget' : 'New Budget'" @close="formOpen = false">
-      <BudgetForm :key="editing?.id || 'new'" :initial="editing" @submit="handleSubmit" @cancel="formOpen = false" />
+      <BudgetForm :key="editing?.id || 'new'" :initial="editing" :saving="saving" @submit="handleSubmit" @cancel="formOpen = false" />
     </Modal>
 
     <ConfirmDialog
       :open="!!deletingId"
+      :loading="deleting"
       message="This will permanently delete the budget. This action cannot be undone."
       @confirm="confirmDelete"
       @cancel="deletingId = null"

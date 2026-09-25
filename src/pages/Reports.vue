@@ -277,6 +277,26 @@ function printReport() {
 
     <section class="space-y-4">
       <div>
+        <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">Breakdown</h2>
+        <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">How expenses and income distribute across categories.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="card p-5">
+          <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50 mb-4">Expense by Category</h3>
+          <div v-if="expenseByCategory.length" class="h-64"><Doughnut :data="expenseDoughnutData" :options="doughnutOptions" /></div>
+          <p v-else class="text-sm text-ink-500 py-10 text-center">No expense data for this range.</p>
+        </div>
+        <div class="card p-5">
+          <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50 mb-4">Income by Category</h3>
+          <div v-if="incomeByCategory.length" class="h-64"><Doughnut :data="incomeDoughnutData" :options="doughnutOptions" /></div>
+          <p v-else class="text-sm text-ink-500 py-10 text-center">No income data for this range.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <div>
         <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">Statement</h2>
         <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">Detailed income and expense records by year or month.</p>
       </div>
@@ -473,26 +493,6 @@ function printReport() {
               </div>
             </div>
           </template>
-        </div>
-      </div>
-    </section>
-
-    <section class="space-y-4">
-      <div>
-        <h2 class="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">Breakdown</h2>
-        <p class="text-sm text-ink-500 dark:text-ink-400 mt-0.5">How expenses and income distribute across categories.</p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="card p-5">
-          <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50 mb-4">Expense by Category</h3>
-          <div v-if="expenseByCategory.length" class="h-64"><Doughnut :data="expenseDoughnutData" :options="doughnutOptions" /></div>
-          <p v-else class="text-sm text-ink-500 py-10 text-center">No expense data for this range.</p>
-        </div>
-        <div class="card p-5">
-          <h3 class="font-display text-base font-semibold text-ink-900 dark:text-ink-50 mb-4">Income by Category</h3>
-          <div v-if="incomeByCategory.length" class="h-64"><Doughnut :data="incomeDoughnutData" :options="doughnutOptions" /></div>
-          <p v-else class="text-sm text-ink-500 py-10 text-center">No income data for this range.</p>
         </div>
       </div>
     </section>

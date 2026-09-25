@@ -92,7 +92,11 @@ financial/
 1. Create a Supabase project.
 2. Run `supabase/schema.sql` in the SQL editor or with the Supabase CLI.
 3. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env`.
-4. Start the app with `npm run dev` and sign up or sign in at `/login`.
+4. Deploy the `delete-user` Edge Function (used by the admin panel to permanently delete users):
+   ```bash
+   supabase functions deploy delete-user
+   ```
+5. Start the app with `npm run dev` and sign up or sign in at `/login`.
 
 Optional demo seeding:
 

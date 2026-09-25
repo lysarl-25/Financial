@@ -66,3 +66,78 @@
     opacity: 0.45;
   }
 }
+
+@keyframes login-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes login-fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes login-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@layer utilities {
+  .animate-login-fade-in {
+    animation: login-fade-in 0.5s ease-out both;
+  }
+  .animate-login-fade-in-left {
+    animation: login-fade-in-left 0.6s ease-out both;
+  }
+  .animate-login-float {
+    animation: login-float 4s ease-in-out infinite;
+  }
+  .delay-75 {
+    animation-delay: 75ms;
+  }
+  .delay-150 {
+    animation-delay: 150ms;
+  }
+  .delay-225 {
+    animation-delay: 225ms;
+  }
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+}
+
+.login-form-enter-active,
+.login-form-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.login-form-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.login-form-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
