@@ -62,6 +62,28 @@ import Skeleton from '@/components/common/Skeleton.vue'
         <Skeleton class="skeleton-text w-48 opacity-60" />
       </div>
 
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="card p-5">
+          <Skeleton class="skeleton-text w-40" />
+          <div class="mt-5 h-64 flex items-center justify-center">
+            <Skeleton class="h-40 w-40 rounded-full" />
+          </div>
+        </div>
+        <div class="card p-5">
+          <Skeleton class="skeleton-text w-40" />
+          <div class="mt-5 h-64 flex items-center justify-center">
+            <Skeleton class="h-40 w-40 rounded-full" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <div class="space-y-2">
+        <Skeleton class="skeleton-text w-28" />
+        <Skeleton class="skeleton-text w-48 opacity-60" />
+      </div>
+
       <div class="card overflow-hidden">
         <div class="p-5 border-b border-ink-100 dark:border-ink-800">
           <div class="flex flex-wrap gap-x-3 gap-y-4">
